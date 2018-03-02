@@ -90,23 +90,40 @@ function clearAddStudentFormInputs(){
  * @param {object} studentObj a single student object with course, name, and grade inside
  */
 function renderStudentOnDom( studentObj ){
-    var tableRow = $("<tr>");
+    var tableRow = $("<tr>", {
+        'class': "studentROW",
+    });
     var tableData = $("<td>");
     var studentName = $("<td>",{
+        'class': "studentData",
         text: studentObj.studentName
     });
     var studentCourse = $("<td>",{
+        'class': "studentData",
         text: studentObj.studentCourse
     });
     var studentGrade = $("<td>",{
+        'class': "studentData",
         text: studentObj.studentGrade
     });
 
     var button = $("<button>", {
-       class: "btn btn-danger btn-xs",
+        //class is in quote because of es6
+       'class': "btn btn-danger btn-xs",
         text: "Delete",
+        //this anonymous function is to take advantage of the lexical scope
+        on: {
+            "click": function () {
+                console.log( "Deleting" );
+                tableRow.remove();
+                var studentIndex = student_array.indexOf(studentObj);
+                console.log(studentIndex);
+                student_array.splice(studentIndex, 1);
+                console.log(student_array);
+            }
+        }
     });
-
+    button[0].studentObj = studentObj;
     var deleteButton = tableData.append(button);
     tableRow.append(studentName, studentCourse, studentGrade, deleteButton);
     $(".student-list tbody").append(tableRow);
