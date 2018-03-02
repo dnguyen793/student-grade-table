@@ -39,6 +39,7 @@ function initializeApp(){
 function addClickHandlersToElements(){
     $(".btn-success").on("click", handleAddClicked);
     $(".btn-default").on("click", handleCancelClick);
+    $(".btn-info").on("click", pullRecordsFromDB);
 }
 
 /***************************************************************************************************
@@ -167,7 +168,10 @@ function renderGradeAverage( averageGrade ){
     $(".avgGrade").text(averageGrade);
 }
 
+//Using the LearningFuze SGT API pull records from the DB using an AJAX call
+function pullRecordsFromDB() {
 
+}
 
 
 
