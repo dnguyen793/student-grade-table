@@ -69,6 +69,7 @@ function handleCancelClick(){
 function addStudent(){
     var studentObj = {};
 
+
     studentObj.studentName = $("#studentName").val();
     studentObj.studentCourse = $("#course").val();
     studentObj.studentGrade = $("#studentGrade").val();
@@ -92,20 +93,20 @@ function clearAddStudentFormInputs(){
  */
 function renderStudentOnDom( studentObj ){
     var tableRow = $("<tr>", {
-        'class': "studentROW",
+        'class': "studentRow",
     });
     var tableData = $("<td>");
     var studentName = $("<td>",{
         'class': "studentData",
-        text: studentObj.studentName
+        text: studentObj.name,
     });
     var studentCourse = $("<td>",{
         'class': "studentData",
-        text: studentObj.studentCourse
+        text: studentObj.course,
     });
     var studentGrade = $("<td>",{
         'class': "studentData",
-        text: studentObj.studentGrade
+        text: studentObj.grade,
     });
 
     var button = $("<button>", {
@@ -137,8 +138,9 @@ function renderStudentOnDom( studentObj ){
  * @calls   renderStudentOnDom, calculateGradeAverage, renderGradeAverage
  */
 function updateStudentList( studentArray ){
-
-    renderStudentOnDom(studentArray[studentArray.length-1]);
+    for(var index = 0; index < studentArray.length; index++){
+        renderStudentOnDom(studentArray[index]);
+    }
     var averageGrade = calculateGradeAverage( studentArray );
     renderGradeAverage( Math.floor(averageGrade) );
 }
@@ -151,7 +153,7 @@ function calculateGradeAverage( studentArray ){
     var accumGrade = null;
     var studentCount = 0;
     for(var i = 0; i < studentArray.length; i++){
-        accumGrade += parseFloat(studentArray[i].studentGrade);
+        accumGrade += parseFloat(studentArray[i].grade);
         studentCount++;
     }
 
@@ -170,8 +172,36 @@ function renderGradeAverage( averageGrade ){
 
 //Using the LearningFuze SGT API pull records from the DB using an AJAX call
 function pullRecordsFromDB() {
+    console.log('1) getData called from button click');
+    var ajaxConfig = {
+        dataType:'json',
+        method: 'post',
+        url: 'https://s-apis.learningfuze.com/sgt/get',
+        data: {
+          'api_key': 'X9BhkpbIMK'
+        },
+        success: function (data) {
+            console.log('2) AJAX Success function called, with the following result:', data);
+            var studentData = data;
+            pushStudentRecordsIntoArray(studentData);
+            updateStudentList(student_array);
+
+        },
+        error: function () {
+            console.log("Trouble getting data");
+        }
+    }
+
+    console.log('3) Making AJAX request');
+    $.ajax(ajaxConfig);
 
 }
+// X9BhkpbIMK
 
-
+//pushing the records into the student_array
+function pushStudentRecordsIntoArray( studentData ) {
+    for(var index = 0; index < studentData.data.length; index++){
+        student_array.push(studentData.data[index]);
+    }
+}
 
