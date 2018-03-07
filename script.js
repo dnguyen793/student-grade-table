@@ -28,6 +28,7 @@ var student_array = [];
 */
 function initializeApp(){
     addClickHandlersToElements();
+    pullRecordsFromDB();
 }
 
 /***************************************************************************************************
@@ -40,6 +41,9 @@ function addClickHandlersToElements(){
     $(".btn-success").on("click", handleAddClicked);
     $(".btn-default").on("click", handleCancelClick);
     $(".btn-info").on("click", pullRecordsFromDB);
+    $(".input-group").on("click", function () {
+        $(".btn-success").text("Add").prop("disabled", false).css({'background-color':"", 'border':''});
+    })
 }
 
 /***************************************************************************************************
@@ -68,15 +72,35 @@ function handleCancelClick(){
  */
 function addStudent(){
     var studentObj = {};
+    var studentName = $("#studentName").val();
+    var studentCourse = $("#course").val();
+    var studentGrade = $("#studentGrade").val();
 
+    if(studentName.length < 2){
+        $(".firstDiv").addClass('has-error');
+    }
+    else if(studentCourse.length < 2){
+        $(".secondDiv").addClass('has-error');
+    }
+    else if(isNaN(studentGrade) || studentGrade < 0 || studentGrade === '' || studentGrade === ' '){
+        $(".thirdDiv").addClass('has-error');
+    }
+    else{
+        $(".firstDiv").removeClass('has-error');
+        $(".secondDiv").removeClass('has-error');
+        $(".thirdDiv").removeClass('has-error');
 
-    studentObj.studentName = $("#studentName").val();
-    studentObj.studentCourse = $("#course").val();
-    studentObj.studentGrade = $("#studentGrade").val();
+        studentObj.name = studentName;
+        studentObj.course = studentCourse;
+        studentObj.grade = parseInt(studentGrade);
 
-    student_array.push(studentObj);
-    clearAddStudentFormInputs();
-    updateStudentList(student_array);
+        student_array.push(studentObj);
+        var result = addingDataToServer();
+        console.log(result);
+        $(".btn-success").text("Student Added").prop("disabled", true).css({'background-color':'#898989', 'border':'black'});
+        clearAddStudentFormInputs();
+        updateStudentList(student_array);
+    }
 }
 /***************************************************************************************************
  * clearAddStudentForm - clears out the form values based on inputIds variable
@@ -120,8 +144,12 @@ function renderStudentOnDom( studentObj ){
                 tableRow.remove();
                 var studentIndex = student_array.indexOf(studentObj);
                 console.log(studentIndex);
+                deleteStudentFrServer(student_array[studentIndex]);
+
                 student_array.splice(studentIndex, 1);
                 console.log(student_array);
+
+
             }
         }
     });
@@ -205,3 +233,49 @@ function pushStudentRecordsIntoArray( studentData ) {
     }
 }
 
+function addingDataToServer() {
+    var ajaxConfig = {
+        dataType:'json',
+        method: 'post',
+        url: 'https://s-apis.learningfuze.com/sgt/create',
+        data: {
+            'api_key': 'X9BhkpbIMK',
+            name: student_array[student_array.length-1].name,
+            course: student_array[student_array.length-1].course,
+            grade: student_array[student_array.length-1].grade,
+        },
+        success: function (data) {
+            console.log(data);
+            student_array[student_array.length-1].id = data['new_id'];
+
+        },
+        error: function () {
+            console.log("Trouble getting data");
+        }
+    }
+
+    console.log('3) Making AJAX request');
+    $.ajax(ajaxConfig);
+}
+
+function deleteStudentFrServer( student ) {
+    var ajaxConfig = {
+        dataType:'json',
+        method: 'post',
+        url: 'https://s-apis.learningfuze.com/sgt/delete',
+        data: {
+            'api_key': 'X9BhkpbIMK',
+            'student_id': student.id,
+        },
+        success: function (data) {
+            console.log(data);
+
+        },
+        error: function () {
+            console.log("Trouble getting data");
+        }
+    }
+
+    console.log('3) Making AJAX request');
+    $.ajax(ajaxConfig);
+}
