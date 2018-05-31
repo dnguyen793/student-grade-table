@@ -27,9 +27,61 @@ var student_array = [];
 * initializes the application, including adding click handlers and pulling in any data from the server, in later versions
 */
 function initializeApp(){
+    $("#studentName").on('focusin', handleStudentNameInput());
+    // $("#course").on('focusin', handleCourseInput());
+    // $("#studentGrade").on('focusin', handleStudentGradeInput());
+
     addClickHandlersToElements();
     pullRecordsFromDB();
 }
+
+/***************************************************************************************************
+* validateStudentNameInput
+* @params {event} 
+* @returns  {undefined}
+*     
+*/
+function handleStudentNameInput(){
+    var name = $('#studentName');
+    var onlyLetters = /^[A-Za-z]+$/;
+
+    name.on('focus', ()=>{
+        $(".name-alert").removeClass('hidden').addClass('show');
+    });
+    name.on('keydown', (event) => {
+        // var studentName = event.target.value;
+        // console.log('value', studentName);
+
+        // if(onlyLetters.test(studentName)){
+        //     console.log('doesnt contain number');
+        // }
+        // else{
+        //     console.log('contain number');
+
+        if (event.keyCode >= 48 && event.keyCode <= 57) {
+            event.preventDefault();
+        }
+    });
+
+    name.on('keyup', (event) => {
+        if(name.val().length > 2){
+            $(".firstDiv").removeClass('has-error').addClass('has-success');
+            $(".name-alert").removeClass("alert-warning alert-danger").addClass("alert-success");
+            $(".name-alert > span").removeClass("glyphicon-exclamation-sign").addClass("glyphicon glyphicon-ok-circle");
+            console.log('good name', $('#studentName').val().length);
+        }
+        else{
+            $(".firstDiv").removeClass('has-success').addClass('has-error');
+            $(".name-alert").removeClass("alert-success").addClass("alert-danger");
+            $(".name-alert > span").removeClass("glyphicon glyphicon-ok-circle").addClass("glyphicon glyphicon-remove-circle");
+        }
+    });
+
+    name.on('focusout', ()=>{
+        $(".name-alert").removeClass('show').addClass('hidden');
+    });
+}
+
 
 /***************************************************************************************************
 * addClickHandlerstoElements
