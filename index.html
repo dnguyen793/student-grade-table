@@ -42,6 +42,10 @@
             <input type="text" class="form-control" name="course" id="course"
                    placeholder="Student Course">
         </div>
+        <div class="alert alert-warning course-alert hidden" role="alert" style="padding: 5px 15px">
+            <span class="glyphicon glyphicon-exclamation-sign"></span>
+            Course cannot be empty
+        </div>
 
         <div class="input-group thirdDiv" style = "margin-bottom: 10px">
             <span class="input-group-addon">
@@ -50,6 +54,11 @@
             <input type="text" class="form-control" name="studentGrade" id="studentGrade"
                    placeholder="Student Grade">
         </div>
+        <div class="alert alert-warning grade-alert hidden" role="alert" style="padding: 5px 15px">
+            <span class="glyphicon glyphicon-exclamation-sign"></span>
+            Must be between 0-100
+        </div>
+
         <button type="button" class="btn-success btn-sm" style = "margin-bottom: 10px" onclick=""> Add  </button>
         <button type="button" class="btn-default btn-sm" style = "margin-bottom: 10px" onclick="">Cancel</button>
         <div>

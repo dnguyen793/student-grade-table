@@ -28,25 +28,25 @@ var student_array = [];
 */
 function initializeApp(){
     $("#studentName").on('focusin', handleStudentNameInput());
-    // $("#course").on('focusin', handleCourseInput());
-    // $("#studentGrade").on('focusin', handleStudentGradeInput());
+    $("#course").on('focusin', handleCourseInput());
+    $("#studentGrade").on('focusin', handleStudentGradeInput());
 
     addClickHandlersToElements();
     pullRecordsFromDB();
 }
 
 /***************************************************************************************************
-* validateStudentNameInput
-* @params {event} 
+* handleStudentNameInput
+* @params {none} 
 * @returns  {undefined}
 *     
 */
 function handleStudentNameInput(){
-    var name = $('#studentName');
-    var onlyLetters = /^[A-Za-z]+$/;
+    let name = $('#studentName');
+    let alert = $(".name-alert");
 
     name.on('focus', ()=>{
-        $(".name-alert").removeClass('hidden').addClass('show');
+        alert.removeClass('hidden').addClass('show');
     });
     name.on('keydown', (event) => {
         // var studentName = event.target.value;
@@ -66,22 +66,101 @@ function handleStudentNameInput(){
     name.on('keyup', (event) => {
         if(name.val().length > 2){
             $(".firstDiv").removeClass('has-error').addClass('has-success');
-            $(".name-alert").removeClass("alert-warning alert-danger").addClass("alert-success");
+            alert.removeClass("alert-warning alert-danger").addClass("alert-success");
             $(".name-alert > span").removeClass("glyphicon-exclamation-sign").addClass("glyphicon glyphicon-ok-circle");
-            console.log('good name', $('#studentName').val().length);
         }
         else{
             $(".firstDiv").removeClass('has-success').addClass('has-error');
-            $(".name-alert").removeClass("alert-success").addClass("alert-danger");
+            alert.removeClass("alert-success").addClass("alert-danger");
             $(".name-alert > span").removeClass("glyphicon glyphicon-ok-circle").addClass("glyphicon glyphicon-remove-circle");
         }
     });
 
     name.on('focusout', ()=>{
-        $(".name-alert").removeClass('show').addClass('hidden');
+        alert.removeClass('show').addClass('hidden');
+        if(name.val().length < 2){
+            $(".firstDiv").removeClass('has-success').addClass('has-error');
+        }
     });
 }
 
+
+/***************************************************************************************************
+* handleCourseInput
+* @params {none} 
+* @returns  {undefined}
+*     
+*/
+function handleCourseInput(){
+    let course = $('#course');
+    let alert = $(".course-alert");
+
+    course.on('focus', ()=>{
+        alert.removeClass('hidden').addClass('show');
+    });
+
+    course.on('keyup', (event) => {
+        if(course.val().length > 4){
+            $(".secondDiv").removeClass('has-error').addClass('has-success');
+            alert.removeClass("alert-warning alert-danger").addClass("alert-success");
+            $(".course-alert > span").removeClass("glyphicon-exclamation-sign").addClass("glyphicon glyphicon-ok-circle");
+        }
+        else{
+            $(".secondDiv").removeClass('has-success').addClass('has-error');
+            alert.removeClass("alert-success").addClass("alert-danger");
+            $(".course-alert > span").removeClass("glyphicon glyphicon-ok-circle").addClass("glyphicon glyphicon-remove-circle");
+        }
+    });
+
+    course.on('focusout', ()=>{
+        alert.removeClass('show').addClass('hidden');
+        if(course.val().length < 4){
+            $(".secondDiv").removeClass('has-success').addClass('has-error');
+        }
+    });
+}
+
+
+/***************************************************************************************************
+* handleStudentGradeInput
+* @params {none} 
+* @returns  {undefined}
+*     
+*/
+function handleStudentGradeInput(){
+    let grade = $('#studentGrade');
+    let alert = $(".grade-alert");
+
+    grade.on('focus', ()=>{
+        alert.removeClass('hidden').addClass('show');
+    });
+    grade.on('keydown', (event) => {
+        if ((event.keyCode < 48 && event.keyCode > 57)) {
+            event.preventDefault();
+        }
+    });
+
+    grade.on('keyup', (event) => {
+        console.log('grade', grade.val());
+        if( grade.val() !== "" && grade.val()<=100 ){
+            $(".thirdDiv").removeClass('has-error').addClass('has-success');
+            alert.removeClass("alert-warning alert-danger").addClass("alert-success");
+            $(".grade-alert > span").removeClass("glyphicon-exclamation-sign").addClass("glyphicon glyphicon-ok-circle");
+        }
+        else{
+            $(".thirdDiv").removeClass('has-success').addClass('has-error');
+            alert.removeClass("alert-success").addClass("alert-danger");
+            $(".grade-alert > span").removeClass("glyphicon glyphicon-ok-circle").addClass("glyphicon glyphicon-remove-circle");
+        }
+    });
+
+    grade.on('focusout', ()=>{
+        alert.removeClass('show').addClass('hidden');
+        if(grade.val() === ""){
+            $(".thirdDiv").removeClass('has-success').addClass('has-error');
+        }
+    });
+}
 
 /***************************************************************************************************
 * addClickHandlerstoElements
