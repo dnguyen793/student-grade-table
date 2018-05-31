@@ -49,14 +49,6 @@ function handleStudentNameInput(){
         alert.removeClass('hidden').addClass('show');
     });
     name.on('keydown', (event) => {
-        // var studentName = event.target.value;
-        // console.log('value', studentName);
-
-        // if(onlyLetters.test(studentName)){
-        //     console.log('doesnt contain number');
-        // }
-        // else{
-        //     console.log('contain number');
 
         if (event.keyCode >= 48 && event.keyCode <= 57) {
             event.preventDefault();
@@ -100,7 +92,7 @@ function handleCourseInput(){
     });
 
     course.on('keyup', (event) => {
-        if(course.val().length > 4){
+        if(course.val().length > 2){
             $(".secondDiv").removeClass('has-error').addClass('has-success');
             alert.removeClass("alert-warning alert-danger").addClass("alert-success");
             $(".course-alert > span").removeClass("glyphicon-exclamation-sign").addClass("glyphicon glyphicon-ok-circle");
@@ -114,7 +106,7 @@ function handleCourseInput(){
 
     course.on('focusout', ()=>{
         alert.removeClass('show').addClass('hidden');
-        if(course.val().length < 4){
+        if(course.val().length < 2){
             $(".secondDiv").removeClass('has-success').addClass('has-error');
         }
     });
@@ -134,14 +126,13 @@ function handleStudentGradeInput(){
     grade.on('focus', ()=>{
         alert.removeClass('hidden').addClass('show');
     });
-    grade.on('keydown', (event) => {
-        if ((event.keyCode < 48 && event.keyCode > 57)) {
+    grade.on('keypress', (event) => {
+        if ((event.keyCode < 48 || event.keyCode > 57)) {
             event.preventDefault();
         }
     });
 
     grade.on('keyup', (event) => {
-        console.log('grade', grade.val());
         if( grade.val() !== "" && grade.val()<=100 ){
             $(".thirdDiv").removeClass('has-error').addClass('has-success');
             alert.removeClass("alert-warning alert-danger").addClass("alert-success");
@@ -207,19 +198,14 @@ function addStudent(){
     var studentCourse = $("#course").val();
     var studentGrade = $("#studentGrade").val();
 
-    if(studentName.length < 2){
-        $(".firstDiv").addClass('has-error');
-    }
-    else if(studentCourse.length < 2){
-        $(".secondDiv").addClass('has-error');
-    }
-    else if(isNaN(studentGrade) || studentGrade < 0 || studentGrade === '' || studentGrade === ' '){
-        $(".thirdDiv").addClass('has-error');
+    if( !studentName || !studentCourse || !studentGrade || $(".firstDiv").hasClass('has-error') || $(".secondDiv").hasClass('has-error') || $(".thirdDiv").hasClass('has-error') ){
+        console.log('theres has error');
+        $(".firstDiv").removeClass('has-success').addClass('has-error');
+        $(".secondDiv").removeClass('has-success').addClass('has-error');
+        $(".thirdDiv").removeClass('has-success').addClass('has-error');
+
     }
     else{
-        $(".firstDiv").removeClass('has-error');
-        $(".secondDiv").removeClass('has-error');
-        $(".thirdDiv").removeClass('has-error');
 
         studentObj.name = studentName;
         studentObj.course = studentCourse;
