@@ -208,12 +208,12 @@ function addStudent(){
     else{
 
         studentObj.name = studentName;
-        studentObj.course = studentCourse;
+        studentObj.course_name = studentCourse;
         studentObj.grade = parseInt(studentGrade);
 
         student_array.push(studentObj);
-        var result = addingDataToServer();
-        console.log(result);
+        addingDataToServer(studentName, studentCourse, parseInt(studentGrade));
+        // var result = addingDataToServer();
         $(".btn-success").text("Student Added").prop("disabled", true).css({'background-color':'#898989', 'border':'black'});
         clearAddStudentFormInputs();
         updateStudentList(student_array);
@@ -371,17 +371,22 @@ function pullRecordsFromDB(){
 //     }
 // }
 
-function addingDataToServer() {
+function addingDataToServer(name, course, grade) {
+    let student = {
+        name: name,
+        course_name: course,
+        grade: grade
+    };
+    // let studentObj = JSON.stringify(student);
     var ajaxConfig = {
         dataType:'json',
         method: 'post',
-        url: 'server/data.php',
-        data: {
+        url: 'server/data.php?action=insert',
+        data: student,
             // 'api_key': 'X9BhkpbIMK',
-            name: student_array[student_array.length-1].name,
-            course: student_array[student_array.length-1].course,
-            grade: student_array[student_array.length-1].grade,
-        },
+        //     name: student_array[student_array.length-1].name,
+        //     course_name: student_array[student_array.length-1].course,
+        //     grade: student_array[student_array.length-1].grade,
         success: function (data) {
             console.log(data);
             student_array[student_array.length-1].id = data['new_id'];
