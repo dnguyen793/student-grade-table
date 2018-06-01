@@ -16,6 +16,11 @@ if(empty($_POST['name']) || empty($_POST['course_name']) || empty($_POST['grade'
 $studentName = $_POST['name'];
 $studentCourse = $_POST['course_name'];
 $studentGrade = $_POST['grade'];
+
+$studentName = stripcslashes($studentName);
+$studentCourse = stripcslashes($studentCourse);
+$studentGrade = stripcslashes($studentGrade);
+
 // //write a query that inserts the data into the database.  remember that ID doesn't need to be set as it is auto incrementing
 $query = "INSERT INTO student_data ( name, grade, course_name) VALUES ( '$studentName', '$studentGrade', '$studentCourse')";
 //send the query to the database, store the result of the query into $result
