@@ -208,12 +208,12 @@ function addStudent(){
     else{
 
         studentObj.name = studentName;
-        studentObj.course = studentCourse;
+        studentObj.course_name = studentCourse;
         studentObj.grade = parseInt(studentGrade);
 
         student_array.push(studentObj);
-        var result = addingDataToServer();
-        console.log(result);
+        addingDataToServer(studentName, studentCourse, parseInt(studentGrade));
+        // var result = addingDataToServer();
         $(".btn-success").text("Student Added").prop("disabled", true).css({'background-color':'#898989', 'border':'black'});
         clearAddStudentFormInputs();
         updateStudentList(student_array);
@@ -243,7 +243,7 @@ function renderStudentOnDom( studentObj ){
     });
     var studentCourse = $("<td>",{
         'class': "studentData",
-        text: studentObj.course,
+        text: studentObj.course_name,
     });
     var studentGrade = $("<td>",{
         'class': "studentData",
@@ -316,51 +316,77 @@ function renderGradeAverage( averageGrade ){
 }
 
 //Using the LearningFuze SGT API pull records from the DB using an AJAX call
-function pullRecordsFromDB() {
-    console.log('1) getData called from button click');
-    var ajaxConfig = {
-        dataType:'json',
-        method: 'post',
-        url: 'https://s-apis.learningfuze.com/sgt/get',
-        data: {
-          'api_key': 'X9BhkpbIMK'
-        },
-        success: function (data) {
-            console.log('2) AJAX Success function called, with the following result:', data);
-            var studentData = data;
-            pushStudentRecordsIntoArray(studentData);
-            updateStudentList(student_array);
+// function pullRecordsFromDB() {
+//     console.log('1) getData called from button click');
+//     var ajaxConfig = {
+//         dataType:'json',
+//         method: 'post',
+//         url: 'https://s-apis.learningfuze.com/sgt/get',
+//         data: {
+//           'api_key': 'X9BhkpbIMK'
+//         },
+//         success: function (data) {
+//             console.log('2) AJAX Success function called, with the following result:', data);
+//             var studentData = data;
+//             pushStudentRecordsIntoArray(studentData);
+//             updateStudentList(student_array);
 
-        },
-        error: function () {
-            console.log("Trouble getting data");
-        }
-    }
+//         },
+//         error: function () {
+//             console.log("Trouble getting data");
+//         }
+//     }
 
-    console.log('3) Making AJAX request');
-    $.ajax(ajaxConfig);
+//     console.log('3) Making AJAX request');
+//     $.ajax(ajaxConfig);
 
-}
+// }
 // X9BhkpbIMK
 
-//pushing the records into the student_array
-function pushStudentRecordsIntoArray( studentData ) {
-    for(var index = 0; index < studentData.data.length; index++){
-        student_array.push(studentData.data[index]);
-    }
+// get all task data fr resources and then render tasks to dom
+// input: none
+// output: none
+function pullRecordsFromDB(){
+    $.ajax({
+        url: "server/data.php?action=readAll",
+        dataType: 'json',
+        method: 'get',
+        success: function(response){
+            console.log('data', response, response.studentData.length);
+            if(response.studentData.length>0){
+                var studentData = response.studentData;
+                // pushStudentRecordsIntoArray(studentData);
+                updateStudentList(studentData);            }
+            else{
+                console.log('something happened');
+            }
+        }
+    });
 }
 
-function addingDataToServer() {
+//pushing the records into the student_array
+// function pushStudentRecordsIntoArray( studentData ) {
+//     for(var index = 0; index < studentData.data.length; index++){
+//         student_array.push(studentData.data[index]);
+//     }
+// }
+
+function addingDataToServer(name, course, grade) {
+    let student = {
+        name: name,
+        course_name: course,
+        grade: grade
+    };
+    // let studentObj = JSON.stringify(student);
     var ajaxConfig = {
         dataType:'json',
         method: 'post',
-        url: 'https://s-apis.learningfuze.com/sgt/create',
-        data: {
-            'api_key': 'X9BhkpbIMK',
-            name: student_array[student_array.length-1].name,
-            course: student_array[student_array.length-1].course,
-            grade: student_array[student_array.length-1].grade,
-        },
+        url: 'server/data.php?action=insert',
+        data: student,
+            // 'api_key': 'X9BhkpbIMK',
+        //     name: student_array[student_array.length-1].name,
+        //     course_name: student_array[student_array.length-1].course,
+        //     grade: student_array[student_array.length-1].grade,
         success: function (data) {
             console.log(data);
             student_array[student_array.length-1].id = data['new_id'];
