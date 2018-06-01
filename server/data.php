@@ -2,7 +2,7 @@
 
 define('fromData',true);
 
-if(empty($_GET["action"])){
+if(empty($_GET["action"])/* check if the get superglobal variable 'action' is empty*/){
 	exit('no action specified');
 };
 //require the mysql_connect.php file.  Make sure your properly configured it!
