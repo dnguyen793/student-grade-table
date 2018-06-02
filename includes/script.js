@@ -162,7 +162,7 @@ function handleStudentGradeInput(){
 function addClickHandlersToElements(){
     $(".btn-success").on("click", handleAddClicked);
     $(".btn-default").on("click", handleCancelClick);
-    $(".btn-info").on("click", pullRecordsFromDB);
+    // $(".btn-info").on("click", pullRecordsFromDB);
     $(".input-group").on("click", function () {
         $(".btn-success").text("Add").prop("disabled", false).css({'background-color':"", 'border':''});
     })
@@ -170,7 +170,7 @@ function addClickHandlersToElements(){
 
 /***************************************************************************************************
  * handleAddClicked - Event Handler when user clicks the add button
- * @param {object} event  The event object from the click
+ * @paxram {object} event  The event object from the click
  * @return: 
        none
  */
@@ -213,6 +213,7 @@ function addStudent(){
 
         student_array.push(studentObj);
         addingDataToServer(studentName, studentCourse, parseInt(studentGrade));
+        
         // var result = addingDataToServer();
         $(".btn-success").text("Student Added").prop("disabled", true).css({'background-color':'#898989', 'border':'black'});
         clearAddStudentFormInputs();
@@ -257,14 +258,12 @@ function renderStudentOnDom( studentObj ){
         //this anonymous function is to take advantage of the lexical scope
         on: {
             "click": function () {
-                console.log( "Deleting" );
                 tableRow.remove();
                 var studentIndex = student_array.indexOf(studentObj);
-                console.log(studentIndex);
+                console.log( "Deleting:", studentIndex, studentObj);
                 deleteStudentFrServer(student_array[studentIndex]);
 
                 student_array.splice(studentIndex, 1);
-                console.log(student_array);
 
 
             }
@@ -352,11 +351,12 @@ function pullRecordsFromDB(){
         dataType: 'json',
         method: 'get',
         success: function(response){
-            console.log('data', response, response.studentData.length);
+            console.log('data', response);
             if(response.studentData.length>0){
                 var studentData = response.studentData;
-                // pushStudentRecordsIntoArray(studentData);
-                updateStudentList(studentData);            }
+                pushStudentRecordsIntoArray(studentData);
+                updateStudentList(studentData);            
+            }
             else{
                 console.log('something happened');
             }
@@ -364,12 +364,13 @@ function pullRecordsFromDB(){
     });
 }
 
-//pushing the records into the student_array
-// function pushStudentRecordsIntoArray( studentData ) {
-//     for(var index = 0; index < studentData.data.length; index++){
-//         student_array.push(studentData.data[index]);
-//     }
-// }
+// pushing the records into the student_array
+function pushStudentRecordsIntoArray( studentData ) {
+    for(var index = 0; index < studentData.length; index++){
+        student_array.push(studentData[index]);
+    }
+    console.log('student_array:', student_array);
+}
 
 function addingDataToServer(name, course, grade) {
     let student = {
@@ -377,7 +378,6 @@ function addingDataToServer(name, course, grade) {
         course_name: course,
         grade: grade
     };
-    // let studentObj = JSON.stringify(student);
     var ajaxConfig = {
         dataType:'json',
         method: 'post',
@@ -387,9 +387,10 @@ function addingDataToServer(name, course, grade) {
         //     name: student_array[student_array.length-1].name,
         //     course_name: student_array[student_array.length-1].course,
         //     grade: student_array[student_array.length-1].grade,
-        success: function (data) {
-            console.log(data);
-            student_array[student_array.length-1].id = data['new_id'];
+        success: function (response) {
+            console.log('insert response:', response);
+            student_array[student_array.length-1].id = response['id'];
+            console.log('last student', student_array[student_array.length-1]);
 
         },
         error: function () {
@@ -402,16 +403,17 @@ function addingDataToServer(name, course, grade) {
 }
 
 function deleteStudentFrServer( student ) {
+    console.log('del student:', student);
     var ajaxConfig = {
         dataType:'json',
         method: 'post',
-        url: 'https://s-apis.learningfuze.com/sgt/delete',
+        url: 'server/data.php?action=delete',
         data: {
-            'api_key': 'X9BhkpbIMK',
+            // 'api_key': 'X9BhkpbIMK',
             'student_id': student.id,
         },
-        success: function (data) {
-            console.log(data);
+        success: function (response) {
+            console.log('del resp:', response);
 
         },
         error: function () {

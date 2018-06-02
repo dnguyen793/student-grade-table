@@ -2,10 +2,10 @@
 
 require_once("mysql_credentials.php");
 
-print_r( $_POST);
-echo $_POST['name'];
-echo $_POST['course_name'];
-echo $_POST['grade'];
+// print_r( $_POST);
+// echo $_POST['name'];
+// echo $_POST['course_name'];
+// echo $_POST['grade'];
 
 // //check if you have all the data you need from the client-side call.  
 // //if not, add an appropriate error to errors
@@ -27,7 +27,7 @@ $query = "INSERT INTO student_data ( name, grade, course_name) VALUES ( '$studen
 $result = mysqli_query($conn, $query);
 $output = [
 	'success' => false,
-	'insertID' => null,
+	'id' => null,
 	'errors' => []
 ];
 
@@ -44,12 +44,13 @@ else{
 		//get the insert ID of the row that was added
 		$new_id = mysqli_insert_id($conn);
 		//add 'insertID' to $outut and set the value to the row's insert ID
-		$output['insertID'] = $new_id;
+		$output['id'] = $new_id;
 	}
 	else{
 		//if not, add to the errors: 'insert error'
 		$output['errors'][] = 'insert error';
 	}
 }
+
 
 ?>  
