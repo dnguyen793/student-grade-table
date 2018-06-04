@@ -10,14 +10,35 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 <body>
+
 <div id="lastModal" class="modal" role="dialog">
     <div class="modal-content">
         <div class="modal-header">
-             <h3 class="modal-title bg-warning">Edit Student</h3>
+             <h3 class="modal-title bg-warning">Editing Student</h3>
         </div>
 
         <div class="modal-body">
+            <h5>Enter the new info:</h5>
+            <div class="input-group" style = "margin-bottom: 10px">
+                <span class="input-group-addon">
+                    <span class="glyphicon glyphicon-user"></span>
+                </span>
+                <input type="text" class="form-control" name="studentName" id="newStudentName" value="" autofocus>
+            </div>
 
+            <div class="input-group" style = "margin-bottom: 10px">
+                <span class="input-group-addon">
+                    <span class="glyphicon glyphicon-list-alt"></span>
+                </span>
+                <input type="text" class="form-control" name="course" id="newStudentCourse" value="">
+            </div>
+
+            <div class="input-group">
+                <span class="input-group-addon">
+                    <span class="glyphicon glyphicon-education"></span>
+                </span>
+                <input type="text" class="form-control" name="studentGrade" id="newStudentGrade" value="">
+            </div>
         </div>
 
         <div class="modal-footer">
@@ -29,7 +50,6 @@
 </div>
 
 <div class="container">
-
 
     <div class="row page-header">
         <!-- only show this element when the isnt on mobile -->

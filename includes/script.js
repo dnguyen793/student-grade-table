@@ -27,7 +27,7 @@ var student_array = [];
 * initializes the application, including adding click handlers and pulling in any data from the server, in later versions
 */
 function initializeApp(){
-    displayModal();
+    // displayModal();
     $("#studentName").on('focusin', handleStudentNameInput());
     $("#course").on('focusin', handleCourseInput());
     $("#studentGrade").on('focusin', handleStudentGradeInput());
@@ -58,7 +58,6 @@ function closeModal(){
 * handleStudentNameInput
 * @params {none} 
 * @returns  {undefined}
-*     
 */
 function handleStudentNameInput(){
     let name = $('#studentName');
@@ -296,7 +295,9 @@ function renderStudentOnDom( studentObj ){
         style: "margin-right: 10px",
         on: {
             "click": () => {
-                console.log('edit btn clicked');
+                console.log('edit btn clicked for:', studentObj);
+                displayModal();
+                displayStudentInfoInsideModal( studentObj.name, studentObj.course_name, studentObj.grade );
             }
         }
     });
@@ -458,3 +459,14 @@ function deleteStudentFrServer( student ) {
     $.ajax(ajaxConfig);
 }
 
+
+/***************************************************************************************************
+ * displayStudentInfoInsideModal
+ * @param: {studentName, studentCourse, studentGrade}
+ * @returns {undefined} none
+ */
+function displayStudentInfoInsideModal( name, course, grade){
+    $("#newStudentName").val(name);
+    $("#newStudentCourse").val(course);
+    $("#newStudentGrade").val(grade);
+}   
