@@ -178,13 +178,14 @@ function handleStudentGradeInput(){
 *     
 */
 function addClickHandlersToElements(){
-    $(".btn-success").on("click", handleAddClicked);
+    $(".addBtn").on("click", handleAddClicked);
     $(".btn-default").on("click", handleCancelClick);
     // $(".btn-info").on("click", pullRecordsFromDB);
     $(".input-group").on("click", function () {
         $(".btn-success").text("Add").prop("disabled", false).css({'background-color':"", 'border':''});
     });
     $(".cancelBtn").on("click", closeModal);
+    $(".saveBtn").on("click", handleUpdatingNewStudentInfo);
 }
 
 /***************************************************************************************************
@@ -297,7 +298,7 @@ function renderStudentOnDom( studentObj ){
             "click": () => {
                 console.log('edit btn clicked for:', studentObj);
                 displayModal();
-                displayStudentInfoInsideModal( studentObj.name, studentObj.course_name, studentObj.grade );
+                displayStudentInfoInsideModal( studentObj.id, studentObj.name, studentObj.course_name, studentObj.grade );
             }
         }
     });
@@ -308,6 +309,7 @@ function renderStudentOnDom( studentObj ){
     $(".student-list tbody").append(tableRow);
 }
 
+fun
 /***************************************************************************************************
  * updateStudentList - centralized function to update the average and call student list update
  * @param students {array} the array of student objects
@@ -398,7 +400,12 @@ function pullRecordsFromDB(){
     });
 }
 
-// pushing the records into the student_array
+
+/***************************************************************************************************
+ * pushStudentRecordsIntoArray - pushing the student records from db into the student_array
+ * @param: {studentObject}
+ * @returns {undefined}
+ */
 function pushStudentRecordsIntoArray( studentData ) {
     for(var index = 0; index < studentData.length; index++){
         student_array.push(studentData[index]);
@@ -406,6 +413,11 @@ function pushStudentRecordsIntoArray( studentData ) {
     console.log('student_array:', student_array);
 }
 
+/***************************************************************************************************
+ * addingDataToServer
+ * @param: {name, course, grade}
+ * @returns {undefined}
+ */
 function addingDataToServer(name, course, grade) {
     let student = {
         name: name,
@@ -436,6 +448,11 @@ function addingDataToServer(name, course, grade) {
     $.ajax(ajaxConfig);
 }
 
+/***************************************************************************************************
+ * deleteStudentFrServer
+ * @param: {student}
+ * @returns {undefined}
+ */
 function deleteStudentFrServer( student ) {
     console.log('del student:', student);
     var ajaxConfig = {
@@ -470,3 +487,54 @@ function displayStudentInfoInsideModal( name, course, grade){
     $("#newStudentCourse").val(course);
     $("#newStudentGrade").val(grade);
 }   
+
+/***************************************************************************************************
+ * handleUpdatingNewStudentInfo
+ * @param: {none}
+ * @returns {undefined}
+ */
+function handleUpdatingNewStudentInfo(){
+    var newData = getNewStudentDataFromModal();
+    console.log('new student data:', newData);
+    updateStudentFrServer(newData.newName, newData.newCourse, newData.newGrade);
+}
+
+/***************************************************************************************************
+ * getNewStudentDataFromModal
+ * @param: {none}
+ * @returns {name, course, grade}
+ */
+function getNewStudentDataFromModal(){
+    let newName = $("#newStudentName").val();
+    let newCourse = $("#newStudentCourse").val();
+    let newGrade = $("#newStudentGrade").val();
+    return {newName, newCourse, newGrade};
+}
+
+/***************************************************************************************************
+ * updateStudentFrServer - update the server with new student info
+ * @param: {name, course, grade}
+ * @returns {undefined}
+ */
+function updateStudentFrServer( name, course, grade ) {
+    var ajaxConfig = {
+        dataType:'json',
+        method: 'post',
+        url: 'server/data.php?action=update',
+        data: {
+            // 'api_key': 'X9BhkpbIMK',
+            newName: name,
+            newCourse: course,
+            newGrade: grade
+        },
+        success: function (response) {
+            console.log('update resp:', response);
+
+        },
+        error: function () {
+            console.log("Trouble getting data");
+        }
+    }
+
+    $.ajax(ajaxConfig);
+}

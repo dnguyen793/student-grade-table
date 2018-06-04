@@ -1,7 +1,14 @@
  <?php
 
+require_once("mysql_credentials.php");
+
+print_r( $_POST);
+
 //check if you have all the data you need from the client-side call.  This should include the fields being changed and the ID of the student to be changed
 //if not, add an appropriate error to errors
+if(empty($_POST['name']) || empty($_POST['course_name']) || empty($_POST['grade'])){
+	exit('missing data');
+};
 
 //write a query that updates the data at the given student ID.  
 $result = null;
