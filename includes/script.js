@@ -27,12 +27,31 @@ var student_array = [];
 * initializes the application, including adding click handlers and pulling in any data from the server, in later versions
 */
 function initializeApp(){
+    displayModal();
     $("#studentName").on('focusin', handleStudentNameInput());
     $("#course").on('focusin', handleCourseInput());
     $("#studentGrade").on('focusin', handleStudentGradeInput());
 
     addClickHandlersToElements();
     pullRecordsFromDB();
+}
+
+/***************************************************************************************************
+* displayModal
+* @params {none} 
+* @returns  {undefined}
+*/
+function displayModal(){
+    let modal = $('#lastModal').css('display','block');
+}
+
+/***************************************************************************************************
+* closeModal - close displaying model
+* @params {none} 
+* @returns  {undefined}
+*/
+function closeModal(){
+    let modal = $('#lastModal').css('display','none');
 }
 
 /***************************************************************************************************
@@ -165,7 +184,8 @@ function addClickHandlersToElements(){
     // $(".btn-info").on("click", pullRecordsFromDB);
     $(".input-group").on("click", function () {
         $(".btn-success").text("Add").prop("disabled", false).css({'background-color':"", 'border':''});
-    })
+    });
+    $(".cancelBtn").on("click", closeModal);
 }
 
 /***************************************************************************************************
@@ -251,7 +271,7 @@ function renderStudentOnDom( studentObj ){
         text: studentObj.grade,
     });
 
-    var button = $("<button>", {
+    var delButton = $("<button>", {
         //class is in quote because of es6
        'class': "btn btn-danger btn-xs",
         text: "Delete",
@@ -269,9 +289,21 @@ function renderStudentOnDom( studentObj ){
             }
         }
     });
-    button[0].studentObj = studentObj;
-    var deleteButton = tableData.append(button);
-    tableRow.append(studentName, studentCourse, studentGrade, deleteButton);
+
+    var editBtn = $("<button>", {
+        'class': "btn btn-warning btn-xs",
+        text: "Edit",
+        style: "margin-right: 10px",
+        on: {
+            "click": () => {
+                console.log('edit btn clicked');
+            }
+        }
+    });
+
+    // button[0].studentObj = studentObj;
+    var buttons = tableData.append(editBtn, delButton);
+    tableRow.append(studentName, studentCourse, studentGrade, buttons);
     $(".student-list tbody").append(tableRow);
 }
 
@@ -282,6 +314,7 @@ function renderStudentOnDom( studentObj ){
  * @calls   renderStudentOnDom, calculateGradeAverage, renderGradeAverage
  */
 function updateStudentList( studentArray ){
+    $(".student-list tbody").empty();
     for(var index = 0; index < studentArray.length; index++){
         renderStudentOnDom(studentArray[index]);
     }
@@ -424,3 +457,4 @@ function deleteStudentFrServer( student ) {
     console.log('3) Making AJAX request');
     $.ajax(ajaxConfig);
 }
+
