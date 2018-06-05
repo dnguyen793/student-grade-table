@@ -138,7 +138,7 @@ function handleCourseInput(){
 function handleStudentGradeInput(){
     let outerDiv = $("#thirdDiv");
     let grade = $('#studentGrade');
-    let alert = $(".grade-alert");
+    let alert = $("#grade-alert");
 
     grade.on('focus', ()=>{
         alert.removeClass('hidden').addClass('show');
@@ -285,7 +285,8 @@ function renderStudentOnDom( studentObj ){
         //this anonymous function is to take advantage of the lexical scope
         on: {
             "click": function () {
-                handleDeleteStudentButton(studentObj);
+                let studentIndex = student_array.indexOf(studentObj);
+                handleDeleteStudentButton(studentObj, studentIndex);
             }
         }
     });
@@ -317,8 +318,8 @@ function handleEditButtonClick(studentObj){
     });
 }
 
-function handleDeleteStudentButton(studentObj){
-    displayDeletingModal( studentObj );
+function handleDeleteStudentButton(studentObj, studentIndex){
+    displayDeletingModal( studentObj, studentIndex );
 
 }
 
@@ -412,7 +413,6 @@ function pushStudentRecordsIntoArray( studentData ) {
     for(var index = 0; index < studentData.length; index++){
         student_array.push(studentData[index]);
     }
-    console.log('student_array:', student_array);
 }
 
 /***************************************************************************************************
@@ -438,7 +438,7 @@ function addingDataToServer(name, course, grade) {
             if(response.success){
    
                 student_array.push(student);
-                student_array[student_array.length-1].id = response['id'];
+                student_array[student_array.length-1].id = response['id'] ;
                 console.log('last student', student_array[student_array.length-1]);
                 
                 let message = $("<h5>", {
@@ -473,7 +473,6 @@ function addingDataToServer(name, course, grade) {
         }
     }
 
-    console.log('3) Making AJAX request');
     $.ajax(ajaxConfig);
 }
 
@@ -483,7 +482,7 @@ function addingDataToServer(name, course, grade) {
  * @returns {undefined}
  */
 function deleteStudentFrServer( student, studentIndex ) {
-    console.log('del student:', student);
+    console.log('del student:', student.id, studentIndex);
     var ajaxConfig = {
         dataType:'json',
         method: 'post',
@@ -518,7 +517,6 @@ function deleteStudentFrServer( student, studentIndex ) {
         }
     }
 
-    console.log('3) Making AJAX request');
     $.ajax(ajaxConfig);
 }
 
@@ -634,10 +632,9 @@ function closeEditingModal(){
 * @params {none} 
 * @returns  {undefined}
 */
-function displayDeletingModal( studentObj ){
+function displayDeletingModal( studentObj, studentIndex ){
     $(".del-modal-body").empty();
 
-    console.log('student', studentObj);
     let name = $("<h5>", {
         text: 'Name: ' + studentObj.name
     });
@@ -653,7 +650,6 @@ function displayDeletingModal( studentObj ){
 
     $(".del-footer").on("click", ".cancelDelBtn", closeDeletingModal);
     $(".del-footer").on("click", ".delBtn", ()=>{
-        var studentIndex = student_array.indexOf(studentObj);
         console.log( "Deleting:", studentIndex, studentObj);
         deleteStudentFrServer(student_array[studentIndex], studentIndex);
 
