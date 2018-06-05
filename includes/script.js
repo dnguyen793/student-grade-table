@@ -89,6 +89,12 @@ function handleCourseInput(){
     let course = $('#course');
     let alert = $(".course-alert");
 
+    course.on('keydown', (event) => {
+        if ( event.keyCode === 191 || event.keyCode === 192 || (event.keyCode >= 186 && event.keyCode <= 188) || (event.keyCode >= 219 && event.keyCode <= 221)) {
+            event.preventDefault();
+        }
+    });
+
     course.on('focus', ()=>{
         alert.removeClass('hidden').addClass('show');
     });
