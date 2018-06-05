@@ -50,6 +50,11 @@ function handleStudentNameInput(){
         alert.removeClass('hidden').addClass('show');
     });
     name.on('keydown', (event) => {
+        if( event.keyCode === 32){
+            if($('#studentName').val() === ""){
+                event.preventDefault();
+            }
+        }
 
         if ((event.keyCode >= 48 && event.keyCode <= 57) || (event.keyCode >= 186 && event.keyCode <= 192) || (event.keyCode >= 219 && event.keyCode <= 222)) {
             event.preventDefault();
@@ -261,24 +266,24 @@ function clearAddStudentFormInputs(){
  * @param {object} studentObj a single student object with course, name, and grade inside
  */
 function renderStudentOnDom( studentObj ){
-    var tableRow = $("<tr>", {
+    let tableRow = $("<tr>", {
         'class': "studentRow",
     });
-    var tableData = $("<td>");
-    var studentName = $("<td>",{
+    let tableData = $("<td>");
+    let studentName = $("<td>",{
         'class': "studentData",
         text: studentObj.name,
     });
-    var studentCourse = $("<td>",{
+    let studentCourse = $("<td>",{
         'class': "studentData",
         text: studentObj.course_name,
     });
-    var studentGrade = $("<td>",{
+    let studentGrade = $("<td>",{
         'class': "studentData",
         text: studentObj.grade,
     });
 
-    var delButton = $("<button>", {
+    let delButton = $("<button>", {
         //class is in quote because of es6
        'class': "btn btn-danger btn-xs",
         text: "Delete",
@@ -291,10 +296,10 @@ function renderStudentOnDom( studentObj ){
         }
     });
 
-    var editBtn = $("<button>", {
+    let editBtn = $("<button>", {
         'class': "btn btn-warning btn-xs",
         text: "Edit",
-        style: "margin-right: 10px",
+        // style: "margin-right: 10px",
         on: {
             "click": () => {
                 handleEditButtonClick(studentObj);
@@ -302,8 +307,12 @@ function renderStudentOnDom( studentObj ){
         }
     });
 
-    // button[0].studentObj = studentObj;
-    var buttons = tableData.append(editBtn, delButton);
+    let buttonContainer = $("<div>", {
+        "class": "buttonContainer"
+    });
+
+    buttonContainer.append(editBtn, delButton);
+    let buttons = tableData.append(buttonContainer);
     tableRow.append(studentName, studentCourse, studentGrade, buttons);
     $(".student-list tbody").append(tableRow);
 }
