@@ -634,6 +634,7 @@ function closeEditingModal(){
 */
 function displayDeletingModal( studentObj, studentIndex ){
     $(".del-modal-body").empty();
+    $("#del-modal-footer").empty();
 
     let name = $("<h5>", {
         text: 'Name: ' + studentObj.name
@@ -645,11 +646,22 @@ function displayDeletingModal( studentObj, studentIndex ){
         text: 'Course: ' + studentObj.course_name,
     })
     $(".del-modal-body").append(name, course, grade);
+
+    let cancelBtn = $("<button>", {
+        text: "Cancel",
+        "class": "btn btn-secondary cancelDelBtn"
+    });
+    let delBtn = $("<button>", {
+        text: "Delete",
+        "class": "btn btn-danger delBtn"
+    })
+    $("#del-modal-footer").append(cancelBtn, delBtn);
+
     let modal = $('#delModal').css('display','block');
 
 
-    $(".del-footer").on("click", ".cancelDelBtn", closeDeletingModal);
-    $(".del-footer").on("click", ".delBtn", ()=>{
+    $(".cancelDelBtn").on("click", closeDeletingModal);
+    $(".delBtn").on("click", ()=>{
         console.log( "Deleting:", studentIndex, studentObj);
         deleteStudentFrServer(student_array[studentIndex], studentIndex);
 
