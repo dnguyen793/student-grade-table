@@ -9,7 +9,8 @@
 }
 
 /* The Modal (background) */
-.modal {
+.updateModal,
+.delModal {
     min-width: 300px;
     display: none;
     position: fixed; 
@@ -42,7 +43,8 @@ div.modal-body{
     padding: 15px 6vw;
 }
 
-.modal-title{
+.modal-title,
+div.modal-header h5{
     text-align: center;
 }
 

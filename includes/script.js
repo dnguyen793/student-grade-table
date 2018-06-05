@@ -27,7 +27,6 @@ var student_array = [];
 * initializes the application, including adding click handlers and pulling in any data from the server, in later versions
 */
 function initializeApp(){
-    // displayModal();
     $("#studentName").on('focusin', handleStudentNameInput());
     $("#course").on('focusin', handleCourseInput());
     $("#studentGrade").on('focusin', handleStudentGradeInput());
@@ -36,23 +35,6 @@ function initializeApp(){
     pullRecordsFromDB();
 }
 
-/***************************************************************************************************
-* displayModal
-* @params {none} 
-* @returns  {undefined}
-*/
-function displayModal(){
-    let modal = $('#lastModal').css('display','block');
-}
-
-/***************************************************************************************************
-* closeModal - close displaying model
-* @params {none} 
-* @returns  {undefined}
-*/
-function closeModal(){
-    let modal = $('#lastModal').css('display','none');
-}
 
 /***************************************************************************************************
 * handleStudentNameInput
@@ -277,13 +259,12 @@ function renderStudentOnDom( studentObj ){
         //this anonymous function is to take advantage of the lexical scope
         on: {
             "click": function () {
-                tableRow.remove();
-                var studentIndex = student_array.indexOf(studentObj);
-                console.log( "Deleting:", studentIndex, studentObj);
-                deleteStudentFrServer(student_array[studentIndex]);
 
-                student_array.splice(studentIndex, 1);
+                handleDeleteStudentButton(studentObj);
 
+                // tableRow.remove();
+
+  
 
             }
         }
@@ -308,13 +289,18 @@ function renderStudentOnDom( studentObj ){
 }
 
 function handleEditButtonClick(studentObj){
-    displayModal();
+    displayEditingModal();
     displayStudentInfoInsideModal( studentObj.name, studentObj.course_name, studentObj.grade );
 
-    $(".cancelBtn").on("click", closeModal);
+    $(".cancelBtn").on("click", closeEditingModal);
     $(".saveBtn").on("click", () => {
         handleUpdatingNewStudentInfo(studentObj);
     });
+}
+
+function handleDeleteStudentButton(studentObj){
+    displayDeletingModal( studentObj );
+
 }
 /***************************************************************************************************
  * updateStudentList - centralized function to update the average and call student list update
@@ -456,10 +442,10 @@ function addingDataToServer(name, course, grade) {
 
 /***************************************************************************************************
  * deleteStudentFrServer
- * @param: {student}
+ * @param: {student, studentIndex}
  * @returns {undefined}
  */
-function deleteStudentFrServer( student ) {
+function deleteStudentFrServer( student, studentIndex ) {
     console.log('del student:', student);
     var ajaxConfig = {
         dataType:'json',
@@ -471,10 +457,27 @@ function deleteStudentFrServer( student ) {
         },
         success: function (response) {
             console.log('del resp:', response);
+            if(response.success){
+                student_array.splice(studentIndex, 1);
+                updateStudentList( student_array );
+                closeDeletingModal();
+            }
+            else{
+                let error = $("<h5>", {
+                    text: "ERROR - Please try again later!",
+                    style: "color: red"
+                });
+                $(".del-modal-body").append(error);
+            }
 
         },
         error: function () {
             console.log("Trouble getting data");
+            let error = $("<h5>", {
+                text: "ERROR - Please try again later!",
+                style: "color: red"
+            });
+            $(".del-modal-body").append(error);
         }
     }
 
@@ -501,7 +504,6 @@ function displayStudentInfoInsideModal( name, course, grade){
  */
 function handleUpdatingNewStudentInfo(studentObj){
     var newData = getNewStudentDataFromModal();
-    console.log('new student data:', newData);
     updateStudentFrServer( studentObj.id, newData.newName, newData.newCourse, newData.newGrade );
 }
 
@@ -536,22 +538,97 @@ function updateStudentFrServer( id, name, course, grade ) {
         },
         success: function (response) {
             console.log('update resp:', response);
-            for(let i = 0; i < student_array.length; i++){
-                if(id === student_array[i].id){
-                    console.log('current student:', student_array[i]);
-                    student_array[i].name = name;
-                    student_array[i].course = course;
-                    student_array[i].grade = grade;
+            console.log('new student data:', id, name, course, grade);
+
+            if(response.success){
+                for(let i = 0; i < student_array.length; i++){
+                    if(id === student_array[i].id){
+                        student_array[i].name = name;
+                        student_array[i].course_name = course;
+                        student_array[i].grade = grade;
+                    }
                 }
+                updateStudentList( student_array );
+                closeEditingModal();
             }
-            updateStudentList( student_array );
-            closeModal();
+            else{
+                let error = $("<h5>", {
+                    text: "ERROR - Please try again later!",
+                    style: "color: red"
+                });
+                $(".modal-body .error").append(error);
+            }
+
 
         },
         error: function () {
             console.log("Trouble getting data");
+            let error = $("<h5>", {
+                text: "ERROR - Please try again later!",
+                style: "color: red"
+            });
+            $(".modal-body .error").append(error);
         }
     }
 
     $.ajax(ajaxConfig);
+}
+
+/***************************************************************************************************
+* displayEditingModal
+* @params {none} 
+* @returns  {undefined}
+*/
+function displayEditingModal(){
+    let modal = $('#updateModal').css('display','block');
+}
+
+/***************************************************************************************************
+* closeEditingModal - close displaying model
+* @params {none} 
+* @returns  {undefined}
+*/
+function closeEditingModal(){
+    let modal = $('#updateModal').css('display','none');
+}
+
+/***************************************************************************************************
+* displayDeletingModal
+* @params {none} 
+* @returns  {undefined}
+*/
+function displayDeletingModal( studentObj ){
+    $(".del-modal-body").empty();
+
+    console.log('student', studentObj);
+    let name = $("<h5>", {
+        text: 'Name: ' + studentObj.name
+    });
+    let grade = $("<h5>", {
+        text: 'Grade: ' + studentObj.grade
+    })
+    let course = $("<h5>", {
+        text: 'Course: ' + studentObj.course_name,
+    })
+    $(".del-modal-body").append(name, course, grade);
+    let modal = $('#delModal').css('display','block');
+
+
+    $(".del-footer").on("click", ".cancelDelBtn", closeDeletingModal);
+    $(".del-footer").on("click", ".delBtn", ()=>{
+        var studentIndex = student_array.indexOf(studentObj);
+        console.log( "Deleting:", studentIndex, studentObj);
+        deleteStudentFrServer(student_array[studentIndex], studentIndex);
+
+    });
+
+}
+
+/***************************************************************************************************
+* closeDeletingModal - close displaying model
+* @params {none} 
+* @returns  {undefined}
+*/
+function closeDeletingModal(){
+    let modal = $('#delModal').css('display','none');
 }

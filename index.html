@@ -11,7 +11,7 @@
 </head>
 <body>
 
-<div id="lastModal" class="modal" role="dialog">
+<div id="updateModal" class="updateModal" role="dialog">
     <div class="modal-content">
         <div class="modal-header">
              <h3 class="modal-title bg-warning">Editing Student</h3>
@@ -39,6 +39,8 @@
                 </span>
                 <input type="text" class="form-control" name="studentGrade" id="newStudentGrade" value="">
             </div>
+
+            <div class="error"></div>
         </div>
 
         <div class="modal-footer">
@@ -49,9 +51,31 @@
     </div>
 </div>
 
+
+<div id="delModal" class="delModal" role="dialog">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3 class="modal-title bg-danger">Delete Student</h3>
+            <h5>Do you wish to delete this student?</h5>
+
+        </div>
+
+        <div class="modal-body del-modal-body">
+
+        </div>
+
+        <div class="modal-footer del-footer">
+            <button class="btn btn-secondary cancelDelBtn">Cancel</button>
+            <button class="btn btn-danger delBtn">Delete</button>
+        </div>
+
+    </div>  
+</div>
+
+
 <div class="container">
 
-    <div class="row page-header">
+    <div class="row">
         <!-- only show this element when the isnt on mobile -->
         <h1 class="hidden-xs hidden-sm">Student Grade Table
             <small class="pull-right">Grade Average : <span class="avgGrade label label-default">0</span></small>
