@@ -216,7 +216,6 @@ function handleCancelClick(){
  * @calls clearAddStudentFormInputs, updateStudentList
  */
 function addStudent(){
-    var studentObj = {};
     var studentName = $("#studentName").val();
     var studentCourse = $("#course").val();
     var studentGrade = $("#studentGrade").val();
@@ -244,10 +243,6 @@ function addStudent(){
     
     }
     else{
-
-        studentObj.name = studentName;
-        studentObj.course_name = studentCourse;
-        studentObj.grade = parseInt(studentGrade);
 
         addingDataToServer(studentName, studentCourse, parseInt(studentGrade));
     }
@@ -440,10 +435,12 @@ function addingDataToServer(name, course, grade) {
 
         success: function (response) {
             console.log('insert response:', response);
-            if(response.success){        
-                student_array.push(studentObj);
+            if(response.success){
+   
+                student_array.push(student);
                 student_array[student_array.length-1].id = response['id'];
                 console.log('last student', student_array[student_array.length-1]);
+                
                 let message = $("<h5>", {
                     text: "Student Successfully Added!",
                     style: "color: green"
