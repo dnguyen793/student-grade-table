@@ -1,7 +1,59 @@
+
+
 .hidden{
     display: none;
 }
 
 .show{
     display: block;
+}
+
+/* The Modal (background) */
+.modal {
+    min-width: 300px;
+    display: none;
+    position: fixed; 
+    z-index: 3; 
+    padding-top: 23vmin;
+    left: 0;
+    top: 0;
+    width: 100vw; 
+    height: 100vh; 
+    overflow: auto; 
+    background-color: rgb(0,0,0);
+    background-color: rgba(0,0,0,0.7);
+}
+
+/* Modal Content */
+.modal-content {
+    position: relative;
+    margin: auto;
+    padding: 1%;
+    border: 1px solid #888;
+    width: 35%;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
+    -webkit-animation-name: animatetop;
+    -webkit-animation-duration: 0.4s;
+    animation-name: animatetop;
+    animation-duration: 0.4s
+}
+
+div.modal-body{
+    padding: 15px 6vw;
+}
+
+.modal-title{
+    text-align: center;
+}
+
+button.btn.btn-secondary {
+    background-color: darkgrey;
+    color: white;
+    margin-right: 10px;
+}
+
+div.modal-footer{
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
 }

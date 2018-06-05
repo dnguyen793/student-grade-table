@@ -27,6 +27,7 @@ var student_array = [];
 * initializes the application, including adding click handlers and pulling in any data from the server, in later versions
 */
 function initializeApp(){
+    // displayModal();
     $("#studentName").on('focusin', handleStudentNameInput());
     $("#course").on('focusin', handleCourseInput());
     $("#studentGrade").on('focusin', handleStudentGradeInput());
@@ -36,10 +37,27 @@ function initializeApp(){
 }
 
 /***************************************************************************************************
+* displayModal
+* @params {none} 
+* @returns  {undefined}
+*/
+function displayModal(){
+    let modal = $('#lastModal').css('display','block');
+}
+
+/***************************************************************************************************
+* closeModal - close displaying model
+* @params {none} 
+* @returns  {undefined}
+*/
+function closeModal(){
+    let modal = $('#lastModal').css('display','none');
+}
+
+/***************************************************************************************************
 * handleStudentNameInput
 * @params {none} 
 * @returns  {undefined}
-*     
 */
 function handleStudentNameInput(){
     let name = $('#studentName');
@@ -160,12 +178,13 @@ function handleStudentGradeInput(){
 *     
 */
 function addClickHandlersToElements(){
-    $(".btn-success").on("click", handleAddClicked);
+    $(".addBtn").on("click", handleAddClicked);
     $(".btn-default").on("click", handleCancelClick);
     // $(".btn-info").on("click", pullRecordsFromDB);
     $(".input-group").on("click", function () {
         $(".btn-success").text("Add").prop("disabled", false).css({'background-color':"", 'border':''});
-    })
+    });
+
 }
 
 /***************************************************************************************************
@@ -251,7 +270,7 @@ function renderStudentOnDom( studentObj ){
         text: studentObj.grade,
     });
 
-    var button = $("<button>", {
+    var delButton = $("<button>", {
         //class is in quote because of es6
        'class': "btn btn-danger btn-xs",
         text: "Delete",
@@ -269,12 +288,34 @@ function renderStudentOnDom( studentObj ){
             }
         }
     });
-    button[0].studentObj = studentObj;
-    var deleteButton = tableData.append(button);
-    tableRow.append(studentName, studentCourse, studentGrade, deleteButton);
+
+    var editBtn = $("<button>", {
+        'class': "btn btn-warning btn-xs",
+        text: "Edit",
+        style: "margin-right: 10px",
+        on: {
+            "click": () => {
+                console.log('edit btn clicked for:', studentObj);
+                handleEditButtonClick(studentObj);
+            }
+        }
+    });
+
+    // button[0].studentObj = studentObj;
+    var buttons = tableData.append(editBtn, delButton);
+    tableRow.append(studentName, studentCourse, studentGrade, buttons);
     $(".student-list tbody").append(tableRow);
 }
 
+function handleEditButtonClick(studentObj){
+    displayModal();
+    displayStudentInfoInsideModal( studentObj.name, studentObj.course_name, studentObj.grade );
+
+    $(".cancelBtn").on("click", closeModal);
+    $(".saveBtn").on("click", () => {
+        handleUpdatingNewStudentInfo(studentObj);
+    });
+}
 /***************************************************************************************************
  * updateStudentList - centralized function to update the average and call student list update
  * @param students {array} the array of student objects
@@ -282,6 +323,7 @@ function renderStudentOnDom( studentObj ){
  * @calls   renderStudentOnDom, calculateGradeAverage, renderGradeAverage
  */
 function updateStudentList( studentArray ){
+    $(".student-list tbody").empty();
     for(var index = 0; index < studentArray.length; index++){
         renderStudentOnDom(studentArray[index]);
     }
@@ -364,7 +406,12 @@ function pullRecordsFromDB(){
     });
 }
 
-// pushing the records into the student_array
+
+/***************************************************************************************************
+ * pushStudentRecordsIntoArray - pushing the student records from db into the student_array
+ * @param: {studentObject}
+ * @returns {undefined}
+ */
 function pushStudentRecordsIntoArray( studentData ) {
     for(var index = 0; index < studentData.length; index++){
         student_array.push(studentData[index]);
@@ -372,6 +419,11 @@ function pushStudentRecordsIntoArray( studentData ) {
     console.log('student_array:', student_array);
 }
 
+/***************************************************************************************************
+ * addingDataToServer
+ * @param: {name, course, grade}
+ * @returns {undefined}
+ */
 function addingDataToServer(name, course, grade) {
     let student = {
         name: name,
@@ -402,6 +454,11 @@ function addingDataToServer(name, course, grade) {
     $.ajax(ajaxConfig);
 }
 
+/***************************************************************************************************
+ * deleteStudentFrServer
+ * @param: {student}
+ * @returns {undefined}
+ */
 function deleteStudentFrServer( student ) {
     console.log('del student:', student);
     var ajaxConfig = {
@@ -422,5 +479,79 @@ function deleteStudentFrServer( student ) {
     }
 
     console.log('3) Making AJAX request');
+    $.ajax(ajaxConfig);
+}
+
+
+/***************************************************************************************************
+ * displayStudentInfoInsideModal
+ * @param: {studentName, studentCourse, studentGrade}
+ * @returns {undefined} none
+ */
+function displayStudentInfoInsideModal( name, course, grade){
+    $("#newStudentName").val(name);
+    $("#newStudentCourse").val(course);
+    $("#newStudentGrade").val(grade);
+}   
+
+/***************************************************************************************************
+ * handleUpdatingNewStudentInfo
+ * @param: {studentObj}
+ * @returns {undefined}
+ */
+function handleUpdatingNewStudentInfo(studentObj){
+    var newData = getNewStudentDataFromModal();
+    console.log('new student data:', newData);
+    updateStudentFrServer( studentObj.id, newData.newName, newData.newCourse, newData.newGrade );
+}
+
+/***************************************************************************************************
+ * getNewStudentDataFromModal
+ * @param: {none}
+ * @returns {name, course, grade}
+ */
+function getNewStudentDataFromModal(){
+    let newName = $("#newStudentName").val();
+    let newCourse = $("#newStudentCourse").val();
+    let newGrade = $("#newStudentGrade").val();
+    return {newName, newCourse, newGrade};
+}
+
+/***************************************************************************************************
+ * updateStudentFrServer - update the server with new student info
+ * @param: {id, name, course, grade}
+ * @returns {undefined}
+ */
+function updateStudentFrServer( id, name, course, grade ) {
+    var ajaxConfig = {
+        dataType:'json',
+        method: 'post',
+        url: 'server/data.php?action=update',
+        data: {
+            // 'api_key': 'X9BhkpbIMK',
+            id: id,
+            newName: name,
+            newCourse: course,
+            newGrade: grade
+        },
+        success: function (response) {
+            console.log('update resp:', response);
+            for(let i = 0; i < student_array.length; i++){
+                if(id === student_array[i].id){
+                    console.log('current student:', student_array[i]);
+                    student_array[i].name = name;
+                    student_array[i].course = course;
+                    student_array[i].grade = grade;
+                }
+            }
+            updateStudentList( student_array );
+            closeModal();
+
+        },
+        error: function () {
+            console.log("Trouble getting data");
+        }
+    }
+
     $.ajax(ajaxConfig);
 }
