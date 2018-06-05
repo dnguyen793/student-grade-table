@@ -356,12 +356,19 @@ function updateStudentList( studentArray ){
 function calculateGradeAverage( studentArray ){
     var accumGrade = null;
     var studentCount = 0;
+    let avgGrade = null;
     for(var i = 0; i < studentArray.length; i++){
         accumGrade += parseFloat(studentArray[i].grade);
         studentCount++;
     }
 
-    var avgGrade = accumGrade/studentCount;
+
+    if( !studentCount ){
+        avgGrade = 0;
+    }
+    else{
+        avgGrade = accumGrade/studentCount;
+    }
     return avgGrade;
 }
 
