@@ -1,7 +1,6 @@
 <?php
 
 require_once("mysql_credentials.php");
-print_r($_POST);
 $studentId = $_POST['student_id'];
 
 //check if you have all the data you need from the client-side call.  
