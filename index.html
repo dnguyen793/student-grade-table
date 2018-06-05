@@ -88,37 +88,37 @@
 
     <div class="student-add-form pull-right col-sm-3">
         <h4>Add Student</h4>
-        <div class="input-group firstDiv" style = "margin-bottom: 10px">
+        <div class="input-group" id="firstDiv" style = "margin-bottom: 10px">
             <span class="input-group-addon">
                 <span class="glyphicon glyphicon-user"></span>
             </span>
             <input type="text" class="form-control" name="studentName" id="studentName" placeholder="Student Name" value="">
         </div>
-        <div class="alert alert-warning name-alert hidden" role="alert" style="padding: 5px 15px">
+        <div class="alert alert-warning hidden" id="name-alert" role="alert" style="padding: 5px 15px">
             <span class="glyphicon glyphicon-exclamation-sign"></span>
             Must contain at least 3 letters
         </div>
 
-        <div class="input-group secondDiv" style = "margin-bottom: 10px">
+        <div class="input-group" id="secondDiv" style = "margin-bottom: 10px">
             <span class="input-group-addon">
                 <span class="glyphicon glyphicon-list-alt"></span>
             </span>
             <input type="text" class="form-control" name="course" id="course" value=""
                    placeholder="Student Course">
         </div>
-        <div class="alert alert-warning course-alert hidden" role="alert" style="padding: 5px 15px">
+        <div class="alert alert-warning hidden" id="course-alert" role="alert" style="padding: 5px 15px">
             <span class="glyphicon glyphicon-exclamation-sign"></span>
             Course must be valid
         </div>
 
-        <div class="input-group thirdDiv" style = "margin-bottom: 10px">
+        <div class="input-group" id="thirdDiv" style = "margin-bottom: 10px">
             <span class="input-group-addon">
                 <span class="glyphicon glyphicon-education"></span>
             </span>
             <input type="text" class="form-control" name="studentGrade" id="studentGrade" value=""
                    placeholder="Student Grade">
         </div>
-        <div class="alert alert-warning grade-alert hidden" role="alert" style="padding: 5px 15px">
+        <div class="alert alert-warning hidden" id="grade-alert" role="alert" style="padding: 5px 15px">
             <span class="glyphicon glyphicon-exclamation-sign"></span>
             Must be between 0-100
         </div>

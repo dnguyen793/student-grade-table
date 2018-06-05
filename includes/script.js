@@ -42,8 +42,9 @@ function initializeApp(){
 * @returns  {undefined}
 */
 function handleStudentNameInput(){
+    let outerDiv = $("#firstDiv");
     let name = $('#studentName');
-    let alert = $(".name-alert");
+    let alert = $("#name-alert");
 
     name.on('focus', ()=>{
         alert.removeClass('hidden').addClass('show');
@@ -57,23 +58,25 @@ function handleStudentNameInput(){
 
     name.on('keyup', (event) => {
         if(name.val().length > 2){
-            $(".firstDiv").removeClass('has-error').addClass('has-success');
+            outerDiv.removeClass('has-error').addClass('has-success');
             alert.removeClass("alert-warning alert-danger").addClass("alert-success");
             alert.removeClass('show').addClass('hidden');
 
-            $(".name-alert > span").removeClass("glyphicon-exclamation-sign").addClass("glyphicon glyphicon-ok-circle");
+            $("#name-alert > span").removeClass("glyphicon-exclamation-sign").addClass("glyphicon glyphicon-ok-circle");
         }
         else{
-            $(".firstDiv").removeClass('has-success').addClass('has-error');
+            outerDiv.removeClass('has-success').addClass('has-error');
             alert.removeClass("alert-success").addClass("alert-danger");
-            $(".name-alert > span").removeClass("glyphicon glyphicon-ok-circle").addClass("glyphicon glyphicon-remove-circle");
+            $("#name-alert > span").removeClass("glyphicon glyphicon-ok-circle").addClass("glyphicon glyphicon-remove-circle");
         }
     });
 
     name.on('focusout', ()=>{
         alert.removeClass('show').addClass('hidden');
         if(name.val().length < 2){
-            $(".firstDiv").removeClass('has-success').addClass('has-error');
+            outerDiv.removeClass('has-success').addClass('has-error');
+            alert.removeClass("alert-success").addClass("alert-danger");
+            $("#name-alert > span").removeClass("glyphicon glyphicon-ok-circle").addClass("glyphicon glyphicon-remove-circle");
         }
     });
 }
@@ -86,8 +89,9 @@ function handleStudentNameInput(){
 *     
 */
 function handleCourseInput(){
+    let outerDiv = $("#secondDiv");
     let course = $('#course');
-    let alert = $(".course-alert");
+    let alert = $("#course-alert");
 
     course.on('keydown', (event) => {
         if ( event.keyCode === 191 || event.keyCode === 192 || (event.keyCode >= 186 && event.keyCode <= 188) || (event.keyCode >= 219 && event.keyCode <= 221)) {
@@ -101,23 +105,25 @@ function handleCourseInput(){
 
     course.on('keyup', (event) => {
         if(course.val().length > 2){
-            $(".secondDiv").removeClass('has-error').addClass('has-success');
+            outerDiv.removeClass('has-error').addClass('has-success');
             alert.removeClass("alert-warning alert-danger").addClass("alert-success");
             alert.removeClass('show').addClass('hidden');
 
-            $(".course-alert > span").removeClass("glyphicon-exclamation-sign").addClass("glyphicon glyphicon-ok-circle");
+            $("#course-alert > span").removeClass("glyphicon-exclamation-sign").addClass("glyphicon glyphicon-ok-circle");
         }
         else{
-            $(".secondDiv").removeClass('has-success').addClass('has-error');
+            outerDiv.removeClass('has-success').addClass('has-error');
             alert.removeClass("alert-success").addClass("alert-danger");
-            $(".course-alert > span").removeClass("glyphicon glyphicon-ok-circle").addClass("glyphicon glyphicon-remove-circle");
+            $("#course-alert > span").removeClass("glyphicon glyphicon-ok-circle").addClass("glyphicon glyphicon-remove-circle");
         }
     });
 
     course.on('focusout', ()=>{
         alert.removeClass('show').addClass('hidden');
         if(course.val().length < 2){
-            $(".secondDiv").removeClass('has-success').addClass('has-error');
+            outerDiv.removeClass('has-success').addClass('has-error');
+            alert.removeClass("alert-success").addClass("alert-danger");
+            $("#course-alert > span").removeClass("glyphicon glyphicon-ok-circle").addClass("glyphicon glyphicon-remove-circle");
         }
     });
 }
@@ -130,6 +136,7 @@ function handleCourseInput(){
 *     
 */
 function handleStudentGradeInput(){
+    let outerDiv = $("#thirdDiv");
     let grade = $('#studentGrade');
     let alert = $(".grade-alert");
 
@@ -137,30 +144,32 @@ function handleStudentGradeInput(){
         alert.removeClass('hidden').addClass('show');
     });
     grade.on('keypress', (event) => {
-        if ((event.keyCode < 48 || event.keyCode > 57)) {
+        if ( (event.keyCode < 48 || event.keyCode > 57) ) {
             event.preventDefault();
         }
     });
 
     grade.on('keyup', (event) => {
         if( grade.val() !== "" && grade.val()<=100 ){
-            $(".thirdDiv").removeClass('has-error').addClass('has-success');
+            outerDiv.removeClass('has-error').addClass('has-success');
             alert.removeClass("alert-warning alert-danger").addClass("alert-success");
             alert.removeClass('show').addClass('hidden');
 
-            $(".grade-alert > span").removeClass("glyphicon-exclamation-sign").addClass("glyphicon glyphicon-ok-circle");
+            $("#grade-alert > span").removeClass("glyphicon-exclamation-sign").addClass("glyphicon glyphicon-ok-circle");
         }
         else{
-            $(".thirdDiv").removeClass('has-success').addClass('has-error');
+            outerDiv.removeClass('has-success').addClass('has-error');
             alert.removeClass("alert-success").addClass("alert-danger");
-            $(".grade-alert > span").removeClass("glyphicon glyphicon-ok-circle").addClass("glyphicon glyphicon-remove-circle");
+            $("#grade-alert > span").removeClass("glyphicon glyphicon-ok-circle").addClass("glyphicon glyphicon-remove-circle");
         }
     });
 
     grade.on('focusout', ()=>{
         alert.removeClass('show').addClass('hidden');
         if(grade.val() === ""){
-            $(".thirdDiv").removeClass('has-success').addClass('has-error');
+            outerDiv.removeClass('has-success').addClass('has-error');
+            alert.removeClass("alert-success").addClass("alert-danger");
+            $("#grade-alert > span").removeClass("glyphicon glyphicon-ok-circle").addClass("glyphicon glyphicon-remove-circle");
         }
     });
 }
@@ -175,9 +184,9 @@ function addClickHandlersToElements(){
     $(".addBtn").on("click", handleAddClicked);
     $(".btn-default").on("click", handleCancelClick);
     // $(".btn-info").on("click", pullRecordsFromDB);
-    $(".input-group").on("click", function () {
-        $(".btn-success").text("Add").prop("disabled", false).css({'background-color':"", 'border':''});
-    });
+    // $(".input-group").on("click", function () {
+    //     $(".btn-success").text("Add").prop("disabled", false).css({'background-color':"", 'border':''});
+    // });
 
 }
 
@@ -198,6 +207,7 @@ function handleAddClicked(event){
  */
 function handleCancelClick(){
     clearAddStudentFormInputs();
+    cleanUpAddForm();
 }
 /***************************************************************************************************
  * addStudent - creates a student objects based on input fields in the form and adds the object to global student array
@@ -212,29 +222,25 @@ function addStudent(){
     var studentGrade = $("#studentGrade").val();
 
     if( !studentName ){
-        console.log('theres has error');
-        $(".displayError").empty();
-        $(".firstDiv").removeClass('has-success').addClass('has-error');
-        let error = $("<h5>", {
-            text: "Please correct the error above!",
-            style: "color: red"
-        });
-        $(".displayError").append(error);
+        $("#firstDiv").removeClass('has-success').addClass('has-error');
     }
     if( !studentCourse ){
-        $(".secondDiv").removeClass('has-success').addClass('has-error');
-
+        $("#secondDiv").removeClass('has-success').addClass('has-error');
     }
     if( !studentGrade ){
-        $(".thirdDiv").removeClass('has-success').addClass('has-error');
+        $("#thirdDiv").removeClass('has-success').addClass('has-error');
 
     }
-    else if( $(".firstDiv").hasClass('has-error') || $(".secondDiv").hasClass('has-error') || $(".thirdDiv").hasClass('has-error') ){
+    if( $("#firstDiv").hasClass('has-error') || $("#secondDiv").hasClass('has-error') || $("#thirdDiv").hasClass('has-error') ){
         let error = $("<h5>", {
-            text: "Please correct the error above!",
+            text: "Please correct the above error!",
             style: "color: red"
         });
         $(".displayError").append(error);
+
+        setInterval(()=>{
+            $(".displayError").empty();            
+        }, 2000);
     
     }
     else{
@@ -243,11 +249,7 @@ function addStudent(){
         studentObj.course_name = studentCourse;
         studentObj.grade = parseInt(studentGrade);
 
-        student_array.push(studentObj);
         addingDataToServer(studentName, studentCourse, parseInt(studentGrade));
-        
-        // var result = addingDataToServer();
-
     }
 }
 /***************************************************************************************************
@@ -288,7 +290,6 @@ function renderStudentOnDom( studentObj ){
         //this anonymous function is to take advantage of the lexical scope
         on: {
             "click": function () {
-
                 handleDeleteStudentButton(studentObj);
             }
         }
@@ -439,20 +440,22 @@ function addingDataToServer(name, course, grade) {
 
         success: function (response) {
             console.log('insert response:', response);
-            if(response.success){
+            if(response.success){        
+                student_array.push(studentObj);
                 student_array[student_array.length-1].id = response['id'];
                 console.log('last student', student_array[student_array.length-1]);
                 let message = $("<h5>", {
-                    text: "Student Was Succesfully Added!",
+                    text: "Student Successfully Added!",
                     style: "color: green"
                 });
                 $(".displayError").append(message);
 
                 setInterval( ()=>{
                     $(".displayError").empty();
-                }, 3000);
+                }, 2000);
 
                 clearAddStudentFormInputs();
+                cleanUpAddForm();
                 updateStudentList(student_array);
             }
             else{
@@ -668,4 +671,21 @@ function displayDeletingModal( studentObj ){
 */
 function closeDeletingModal(){
     let modal = $('#delModal').css('display','none');
+}
+
+/***************************************************************************************************
+* cleanUpAddForm - restore the form to its original state
+* @params {none} 
+* @returns  {undefined}
+*/
+
+function cleanUpAddForm(){
+    $("#firstDiv, #name-alert, #name-alert > span").removeAttr("class");
+    $("#secondDiv, #course-alert, #course-alert > span").removeAttr("class");
+    $("#thirdDiv, #grade-alert, #grade-alert > span").removeAttr("class");
+
+    $("#firstDiv, #secondDiv, #thirdDiv").addClass("input-group");
+    $("#name-alert, #course-alert, #grade-alert").addClass("alert alert-warning hidden");
+    $("#name-alert > span, #course-alert > span, #grade-alert > span").addClass("glyphicon glyphicon-exclamation-sign");
+
 }
