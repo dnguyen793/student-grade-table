@@ -184,8 +184,7 @@ function addClickHandlersToElements(){
     $(".input-group").on("click", function () {
         $(".btn-success").text("Add").prop("disabled", false).css({'background-color':"", 'border':''});
     });
-    $(".cancelBtn").on("click", closeModal);
-    $(".saveBtn").on("click", handleUpdatingNewStudentInfo);
+
 }
 
 /***************************************************************************************************
@@ -297,8 +296,7 @@ function renderStudentOnDom( studentObj ){
         on: {
             "click": () => {
                 console.log('edit btn clicked for:', studentObj);
-                displayModal();
-                displayStudentInfoInsideModal( studentObj.id, studentObj.name, studentObj.course_name, studentObj.grade );
+                handleEditButtonClick(studentObj);
             }
         }
     });
@@ -309,7 +307,15 @@ function renderStudentOnDom( studentObj ){
     $(".student-list tbody").append(tableRow);
 }
 
-fun
+function handleEditButtonClick(studentObj){
+    displayModal();
+    displayStudentInfoInsideModal( studentObj.name, studentObj.course_name, studentObj.grade );
+
+    $(".cancelBtn").on("click", closeModal);
+    $(".saveBtn").on("click", () => {
+        handleUpdatingNewStudentInfo(studentObj);
+    });
+}
 /***************************************************************************************************
  * updateStudentList - centralized function to update the average and call student list update
  * @param students {array} the array of student objects
@@ -490,13 +496,13 @@ function displayStudentInfoInsideModal( name, course, grade){
 
 /***************************************************************************************************
  * handleUpdatingNewStudentInfo
- * @param: {none}
+ * @param: {studentObj}
  * @returns {undefined}
  */
-function handleUpdatingNewStudentInfo(){
+function handleUpdatingNewStudentInfo(studentObj){
     var newData = getNewStudentDataFromModal();
     console.log('new student data:', newData);
-    updateStudentFrServer(newData.newName, newData.newCourse, newData.newGrade);
+    updateStudentFrServer( studentObj.id, newData.newName, newData.newCourse, newData.newGrade );
 }
 
 /***************************************************************************************************
@@ -513,22 +519,33 @@ function getNewStudentDataFromModal(){
 
 /***************************************************************************************************
  * updateStudentFrServer - update the server with new student info
- * @param: {name, course, grade}
+ * @param: {id, name, course, grade}
  * @returns {undefined}
  */
-function updateStudentFrServer( name, course, grade ) {
+function updateStudentFrServer( id, name, course, grade ) {
     var ajaxConfig = {
         dataType:'json',
         method: 'post',
         url: 'server/data.php?action=update',
         data: {
             // 'api_key': 'X9BhkpbIMK',
+            id: id,
             newName: name,
             newCourse: course,
             newGrade: grade
         },
         success: function (response) {
             console.log('update resp:', response);
+            for(let i = 0; i < student_array.length; i++){
+                if(id === student_array[i].id){
+                    console.log('current student:', student_array[i]);
+                    student_array[i].name = name;
+                    student_array[i].course = course;
+                    student_array[i].grade = grade;
+                }
+            }
+            updateStudentList( student_array );
+            closeModal();
 
         },
         error: function () {
