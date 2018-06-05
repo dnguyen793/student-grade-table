@@ -50,7 +50,7 @@ function handleStudentNameInput(){
     });
     name.on('keydown', (event) => {
 
-        if (event.keyCode >= 48 && event.keyCode <= 57) {
+        if ((event.keyCode >= 48 && event.keyCode <= 57) || (event.keyCode >= 186 && event.keyCode <= 192) || (event.keyCode >= 219 && event.keyCode <= 222)) {
             event.preventDefault();
         }
     });
@@ -59,6 +59,8 @@ function handleStudentNameInput(){
         if(name.val().length > 2){
             $(".firstDiv").removeClass('has-error').addClass('has-success');
             alert.removeClass("alert-warning alert-danger").addClass("alert-success");
+            alert.removeClass('show').addClass('hidden');
+
             $(".name-alert > span").removeClass("glyphicon-exclamation-sign").addClass("glyphicon glyphicon-ok-circle");
         }
         else{
@@ -95,6 +97,8 @@ function handleCourseInput(){
         if(course.val().length > 2){
             $(".secondDiv").removeClass('has-error').addClass('has-success');
             alert.removeClass("alert-warning alert-danger").addClass("alert-success");
+            alert.removeClass('show').addClass('hidden');
+
             $(".course-alert > span").removeClass("glyphicon-exclamation-sign").addClass("glyphicon glyphicon-ok-circle");
         }
         else{
@@ -136,6 +140,8 @@ function handleStudentGradeInput(){
         if( grade.val() !== "" && grade.val()<=100 ){
             $(".thirdDiv").removeClass('has-error').addClass('has-success');
             alert.removeClass("alert-warning alert-danger").addClass("alert-success");
+            alert.removeClass('show').addClass('hidden');
+
             $(".grade-alert > span").removeClass("glyphicon-exclamation-sign").addClass("glyphicon glyphicon-ok-circle");
         }
         else{
@@ -199,12 +205,31 @@ function addStudent(){
     var studentCourse = $("#course").val();
     var studentGrade = $("#studentGrade").val();
 
-    if( !studentName || !studentCourse || !studentGrade || $(".firstDiv").hasClass('has-error') || $(".secondDiv").hasClass('has-error') || $(".thirdDiv").hasClass('has-error') ){
+    if( !studentName ){
         console.log('theres has error');
+        $(".displayError").empty();
         $(".firstDiv").removeClass('has-success').addClass('has-error');
+        let error = $("<h5>", {
+            text: "Please correct the error above!",
+            style: "color: red"
+        });
+        $(".displayError").append(error);
+    }
+    if( !studentCourse ){
         $(".secondDiv").removeClass('has-success').addClass('has-error');
+
+    }
+    if( !studentGrade ){
         $(".thirdDiv").removeClass('has-success').addClass('has-error');
 
+    }
+    else if( $(".firstDiv").hasClass('has-error') || $(".secondDiv").hasClass('has-error') || $(".thirdDiv").hasClass('has-error') ){
+        let error = $("<h5>", {
+            text: "Please correct the error above!",
+            style: "color: red"
+        });
+        $(".displayError").append(error);
+    
     }
     else{
 
@@ -216,9 +241,7 @@ function addStudent(){
         addingDataToServer(studentName, studentCourse, parseInt(studentGrade));
         
         // var result = addingDataToServer();
-        $(".btn-success").text("Student Added").prop("disabled", true).css({'background-color':'#898989', 'border':'black'});
-        clearAddStudentFormInputs();
-        updateStudentList(student_array);
+
     }
 }
 /***************************************************************************************************
@@ -261,11 +284,6 @@ function renderStudentOnDom( studentObj ){
             "click": function () {
 
                 handleDeleteStudentButton(studentObj);
-
-                // tableRow.remove();
-
-  
-
             }
         }
     });
@@ -276,7 +294,6 @@ function renderStudentOnDom( studentObj ){
         style: "margin-right: 10px",
         on: {
             "click": () => {
-                console.log('edit btn clicked for:', studentObj);
                 handleEditButtonClick(studentObj);
             }
         }
@@ -302,6 +319,7 @@ function handleDeleteStudentButton(studentObj){
     displayDeletingModal( studentObj );
 
 }
+
 /***************************************************************************************************
  * updateStudentList - centralized function to update the average and call student list update
  * @param students {array} the array of student objects
@@ -310,12 +328,14 @@ function handleDeleteStudentButton(studentObj){
  */
 function updateStudentList( studentArray ){
     $(".student-list tbody").empty();
+
     for(var index = 0; index < studentArray.length; index++){
         renderStudentOnDom(studentArray[index]);
     }
     var averageGrade = calculateGradeAverage( studentArray );
     renderGradeAverage( Math.floor(averageGrade) );
 }
+
 /***************************************************************************************************
  * calculateGradeAverage - loop through the global student array and calculate average grade and return that value
  * @param: {array} students  the array of student objects
@@ -332,6 +352,7 @@ function calculateGradeAverage( studentArray ){
     var avgGrade = accumGrade/studentCount;
     return avgGrade;
 }
+
 /***************************************************************************************************
  * renderGradeAverage - updates the on-page grade average
  * @param: {number} average    the grade average
@@ -342,37 +363,7 @@ function renderGradeAverage( averageGrade ){
     $(".avgGrade").text(averageGrade);
 }
 
-//Using the LearningFuze SGT API pull records from the DB using an AJAX call
-// function pullRecordsFromDB() {
-//     console.log('1) getData called from button click');
-//     var ajaxConfig = {
-//         dataType:'json',
-//         method: 'post',
-//         url: 'https://s-apis.learningfuze.com/sgt/get',
-//         data: {
-//           'api_key': 'X9BhkpbIMK'
-//         },
-//         success: function (data) {
-//             console.log('2) AJAX Success function called, with the following result:', data);
-//             var studentData = data;
-//             pushStudentRecordsIntoArray(studentData);
-//             updateStudentList(student_array);
 
-//         },
-//         error: function () {
-//             console.log("Trouble getting data");
-//         }
-//     }
-
-//     console.log('3) Making AJAX request');
-//     $.ajax(ajaxConfig);
-
-// }
-// X9BhkpbIMK
-
-// get all task data fr resources and then render tasks to dom
-// input: none
-// output: none
 function pullRecordsFromDB(){
     $.ajax({
         url: "server/data.php?action=readAll",
@@ -380,15 +371,32 @@ function pullRecordsFromDB(){
         method: 'get',
         success: function(response){
             console.log('data', response);
-            if(response.studentData.length>0){
-                var studentData = response.studentData;
-                pushStudentRecordsIntoArray(studentData);
-                updateStudentList(studentData);            
+            if(response.success){
+            
+                if(response.studentData.length>0){
+                    var studentData = response.studentData;
+                    pushStudentRecordsIntoArray(studentData);
+                    updateStudentList(studentData);            
+                }
             }
             else{
                 console.log('something happened');
+                let error = $("<h5>", {
+                    text: "ERROR GETTING DATA - Please try again later!",
+                    style: "color: red"
+                });
+                $(".displayError").append(error);
             }
+        },
+        error: function () {
+            console.log("Trouble getting data");
+            let error = $("<h5>", {
+                text: "ERROR GETTING DATA - Please try again later!",
+                style: "color: red"
+            });
+            $(".displayError").append(error);
         }
+
     });
 }
 
@@ -422,17 +430,40 @@ function addingDataToServer(name, course, grade) {
         url: 'server/data.php?action=insert',
         data: student,
             // 'api_key': 'X9BhkpbIMK',
-        //     name: student_array[student_array.length-1].name,
-        //     course_name: student_array[student_array.length-1].course,
-        //     grade: student_array[student_array.length-1].grade,
+
         success: function (response) {
             console.log('insert response:', response);
-            student_array[student_array.length-1].id = response['id'];
-            console.log('last student', student_array[student_array.length-1]);
+            if(response.success){
+                student_array[student_array.length-1].id = response['id'];
+                console.log('last student', student_array[student_array.length-1]);
+                let message = $("<h5>", {
+                    text: "Student Was Succesfully Added!",
+                    style: "color: green"
+                });
+                $(".displayError").append(message);
 
+                setInterval( ()=>{
+                    $(".displayError").empty();
+                }, 3000);
+
+                clearAddStudentFormInputs();
+                updateStudentList(student_array);
+            }
+            else{
+                let error = $("<h5>", {
+                    text: "ERROR ADDING STUDENT - Please try again later!",
+                    style: "color: red"
+                });
+                $(".displayError").append(error);
+            }
         },
         error: function () {
             console.log("Trouble getting data");
+            let error = $("<h5>", {
+                text: "ERROR ADDING STUDENT - Please try again later!",
+                style: "color: red"
+            });
+            $(".displayError").append(error);
         }
     }
 
