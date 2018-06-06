@@ -321,7 +321,7 @@ function handleEditButtonClick(studentObj){
     displayEditingModal();
     displayStudentInfoInsideModal( studentObj.name, studentObj.course_name, studentObj.grade );
 
-    $(".cancelBtn").on("click", closeEditingModal);
+    $(".cancelEditBtn").on("click", closeEditingModal);
     $(".saveBtn").on("click", () => {
         handleUpdatingNewStudentInfo(studentObj);
     });
@@ -629,7 +629,7 @@ function updateStudentFrServer( id, name, course, grade ) {
                 closeEditingModal();
             }
             else{
-                $(".displayError").empty();
+                $(".modal-body .error").empty();
 
                 let error = $("<h5>", {
                     text: response.errors[0],
@@ -637,7 +637,7 @@ function updateStudentFrServer( id, name, course, grade ) {
                 });
                 $(".modal-body .error").append(error);
                 setInterval( ()=>{
-                    $(".displayError").empty();
+                    $(".modal-body .error").empty();
                 }, 2300);
             }
 
@@ -645,7 +645,7 @@ function updateStudentFrServer( id, name, course, grade ) {
         },
         error: function () {
             console.log("Trouble getting data");
-            $(".displayError").empty();
+            $(".modal-body .error").empty();
 
             let error = $("<h5>", {
                 text: response.errors[0],
@@ -653,7 +653,7 @@ function updateStudentFrServer( id, name, course, grade ) {
             });
             $(".modal-body .error").append(error);
             setInterval( ()=>{
-                $(".displayError").empty();
+                $(".modal-body .error").empty();
             }, 2300);
         }
     }
