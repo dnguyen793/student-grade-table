@@ -12,6 +12,8 @@ $newName = $_POST['newName'];
 $newCourse = $_POST['newCourse'];
 $newGrade = $_POST['newGrade'];
 
+$id = 
+
 //write a query that updates the data at the given student ID.  
 $query = "UPDATE `student_data` SET `name`='$newName',`grade`='$newGrade',`course_name`='$newCourse' WHERE id = '$id'";
 
