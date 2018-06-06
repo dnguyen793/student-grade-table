@@ -31,29 +31,24 @@ function initializeApp(){
     $("#course").on('focusin', handleCourseInput());
     $("#studentGrade").on('focusin', handleStudentGradeInput());
     
-    // let editModal = $('#updateModal');
+    closeModalOnClickOutsideModal();
+    addClickHandlersToElements();
+    pullRecordsFromDB();
+}
+
+function closeModalOnClickOutsideModal(){
+    let editModal = $('#updateModal');
+
     let delModal = $('#delModal');
     window.onclick = function(event) {
         if (event.target == delModal[0]) {
             delModal.css("display","none");
         }
-    }
-
-    // Get the modal
-    let editModal = $('#updateModal');
-
-    // When the user clicks anywhere outside of the modal, close it
-    window.onclick = function(event) {
-        if (event.target == editModal[0]) {
+        else if(event.target == editModal[0]){
             editModal.css("display","none");
         }
-    }
-
-    addClickHandlersToElements();
-    pullRecordsFromDB();
+    };
 }
-
-
 /***************************************************************************************************
 * handleStudentNameInput
 * @params {none} 
