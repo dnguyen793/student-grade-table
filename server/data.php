@@ -30,6 +30,10 @@ switch($_GET["action"]/*do a comparison switch on the get superglobal action*/){
 		//include the update.php file
 		include('dataApi/update.php');
 		break;
+	case 'name-az':
+		//include the update.php file
+		include('dataApi/name-az.php');
+		break;
 };
 
 //convert the $output variable to json, store the result in $outputJSON

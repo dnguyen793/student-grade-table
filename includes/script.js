@@ -30,6 +30,24 @@ function initializeApp(){
     $("#studentName").on('focusin', handleStudentNameInput());
     $("#course").on('focusin', handleCourseInput());
     $("#studentGrade").on('focusin', handleStudentGradeInput());
+    
+    // let editModal = $('#updateModal');
+    let delModal = $('#delModal');
+    window.onclick = function(event) {
+        if (event.target == delModal[0]) {
+            delModal.css("display","none");
+        }
+    }
+
+    // Get the modal
+    let editModal = $('#updateModal');
+
+    // When the user clicks anywhere outside of the modal, close it
+    window.onclick = function(event) {
+        if (event.target == editModal[0]) {
+            editModal.css("display","none");
+        }
+    }
 
     addClickHandlersToElements();
     pullRecordsFromDB();
@@ -188,10 +206,6 @@ function handleStudentGradeInput(){
 function addClickHandlersToElements(){
     $(".addBtn").on("click", handleAddClicked);
     $(".btn-default").on("click", handleCancelClick);
-    // $(".btn-info").on("click", pullRecordsFromDB);
-    // $(".input-group").on("click", function () {
-    //     $(".btn-success").text("Add").prop("disabled", false).css({'background-color':"", 'border':''});
-    // });
 
 }
 
@@ -202,6 +216,7 @@ function addClickHandlersToElements(){
        none
  */
 function handleAddClicked(event){
+    $(".displayError").empty();
     addStudent();
 }
 /***************************************************************************************************
@@ -269,7 +284,9 @@ function renderStudentOnDom( studentObj ){
     let tableRow = $("<tr>", {
         'class': "studentRow",
     });
-    let tableData = $("<td>");
+    let tableData = $("<td>", {
+        "class": "operations"
+    });
     let studentName = $("<td>",{
         'class': "studentData",
         text: studentObj.name,
@@ -318,13 +335,9 @@ function renderStudentOnDom( studentObj ){
 }
 
 function handleEditButtonClick(studentObj){
-    displayEditingModal();
+    displayEditingModal(studentObj);
     displayStudentInfoInsideModal( studentObj.name, studentObj.course_name, studentObj.grade );
 
-    $(".cancelBtn").on("click", closeEditingModal);
-    $(".saveBtn").on("click", () => {
-        handleUpdatingNewStudentInfo(studentObj);
-    });
 }
 
 function handleDeleteStudentButton(studentObj, studentIndex){
@@ -629,7 +642,7 @@ function updateStudentFrServer( id, name, course, grade ) {
                 closeEditingModal();
             }
             else{
-                $(".displayError").empty();
+                $(".modal-body .error").empty();
 
                 let error = $("<h5>", {
                     text: response.errors[0],
@@ -637,7 +650,7 @@ function updateStudentFrServer( id, name, course, grade ) {
                 });
                 $(".modal-body .error").append(error);
                 setInterval( ()=>{
-                    $(".displayError").empty();
+                    $(".modal-body .error").empty();
                 }, 2300);
             }
 
@@ -645,7 +658,7 @@ function updateStudentFrServer( id, name, course, grade ) {
         },
         error: function () {
             console.log("Trouble getting data");
-            $(".displayError").empty();
+            $(".modal-body .error").empty();
 
             let error = $("<h5>", {
                 text: response.errors[0],
@@ -653,7 +666,7 @@ function updateStudentFrServer( id, name, course, grade ) {
             });
             $(".modal-body .error").append(error);
             setInterval( ()=>{
-                $(".displayError").empty();
+                $(".modal-body .error").empty();
             }, 2300);
         }
     }
@@ -666,8 +679,28 @@ function updateStudentFrServer( id, name, course, grade ) {
 * @params {none} 
 * @returns  {undefined}
 */
-function displayEditingModal(){
+function displayEditingModal(studentObj){
+    $("#newStudentName").on('focusin', handleStudentNameInputOnEditModal());
+    $("#newStudentCourse").on('focusin', handleCourseInputOnEditModal());
+    $("#newStudentGrade").on('focusin', handleStudentGradeInputOnEditModal());
+
+    $(".modal-footer").empty();
+    let cancel = $("<button>", {
+        "class": "btn btn-secondary cancelEditBtn",
+        text: "Cancel"
+    });
+    let save = $("<button>", {
+        "class": "btn btn-success saveBtn",
+        text: "Save"
+    });
+    $(".modal-footer").append(cancel, save);
+
     let modal = $('#updateModal').css('display','block');
+
+    $(".cancelEditBtn").on("click", closeEditingModal);
+    $(".saveBtn").on("click", () => {
+        handleUpdatingNewStudentInfo(studentObj);
+    });
 }
 
 /***************************************************************************************************
@@ -677,6 +710,7 @@ function displayEditingModal(){
 */
 function closeEditingModal(){
     let modal = $('#updateModal').css('display','none');
+    cleanUpAddFormOnEditModal();
 }
 
 /***************************************************************************************************
@@ -744,5 +778,134 @@ function cleanUpAddForm(){
     $("#firstDiv, #secondDiv, #thirdDiv").addClass("input-group");
     $("#name-alert, #course-alert, #grade-alert").addClass("alert alert-warning hidden");
     $("#name-alert > span, #course-alert > span, #grade-alert > span").addClass("glyphicon glyphicon-exclamation-sign");
+
+}
+
+function handleStudentNameInputOnEditModal(){
+    let outerDiv = $("#nameDiv");
+    let name = $('#newStudentName');
+    let alert = $("#edit-name-alert");
+
+    name.on('keydown', (event) => {
+        if( event.keyCode === 32){
+            if(name.val() === ""){
+                event.preventDefault();
+            }
+        }
+
+        if ((event.keyCode >= 48 && event.keyCode <= 57) || (event.keyCode >= 186 && event.keyCode <= 192) || (event.keyCode >= 219 && event.keyCode <= 222)) {
+            event.preventDefault();
+        }
+    });
+
+    name.on('keyup', (event) => {
+        if(name.val().length > 2){
+            outerDiv.removeClass('has-error').addClass('has-success');
+            alert.removeClass("alert-warning alert-danger").addClass("alert-success");
+            alert.removeClass('show').addClass('hidden');
+
+            $("#edit-name-alert > span").removeClass("glyphicon-exclamation-sign").addClass("glyphicon glyphicon-ok-circle");
+        }
+        else{
+            alert.removeClass('hidden').addClass('show');
+            outerDiv.removeClass('has-success').addClass('has-error');
+            alert.removeClass("alert-success").addClass("alert-danger");
+            $("#edit-name-alert > span").removeClass("glyphicon glyphicon-ok-circle").addClass("glyphicon glyphicon-remove-circle");
+        }
+    });
+
+    name.on('focusout', ()=>{
+        alert.removeClass('show').addClass('hidden');
+        if(name.val().length < 2 || name.val()===""){
+            outerDiv.removeClass('has-success').addClass('has-error');
+            alert.removeClass("alert-success").addClass("alert-danger");
+            $("#edit-name-alert > span").removeClass("glyphicon glyphicon-ok-circle").addClass("glyphicon glyphicon-remove-circle");
+        }
+    });
+}
+
+
+function handleCourseInputOnEditModal(){
+    let outerDiv = $("#courseDiv");
+    let course = $('#newStudentCourse');
+    let alert = $("#edit-course-alert");
+
+    course.on('keydown', (event) => {
+        if ( event.keyCode === 191 || event.keyCode === 192 || (event.keyCode >= 186 && event.keyCode <= 188) || (event.keyCode >= 219 && event.keyCode <= 221)) {
+            event.preventDefault();
+        }
+    });
+
+    course.on('keyup', (event) => {
+        if(course.val().length > 2){
+            outerDiv.removeClass('has-error').addClass('has-success');
+            alert.removeClass("alert-warning alert-danger").addClass("alert-success");
+            alert.removeClass('show').addClass('hidden');
+
+            $("#edit-course-alert > span").removeClass("glyphicon-exclamation-sign").addClass("glyphicon glyphicon-ok-circle");
+        }
+        else{
+            alert.removeClass('hidden').addClass('show');
+            outerDiv.removeClass('has-success').addClass('has-error');
+            alert.removeClass("alert-success").addClass("alert-danger");
+            $("#edit-course-alert > span").removeClass("glyphicon glyphicon-ok-circle").addClass("glyphicon glyphicon-remove-circle");
+        }
+    });
+
+    course.on('focusout', ()=>{
+        alert.removeClass('show').addClass('hidden');
+        if(course.val().length < 2 || course.val()===""){
+            outerDiv.removeClass('has-success').addClass('has-error');
+            alert.removeClass("alert-success").addClass("alert-danger");
+            $("#edit-course-alert > span").removeClass("glyphicon glyphicon-ok-circle").addClass("glyphicon glyphicon-remove-circle");
+        }
+    });
+}
+
+function handleStudentGradeInputOnEditModal(){
+    let outerDiv = $("#gradeDiv");
+    let grade = $('#newStudentGrade');
+    let alert = $("#edit-grade-alert");
+
+    grade.on('keypress', (event) => {
+        if ( (event.keyCode < 48 || event.keyCode > 57) ) {
+            event.preventDefault();
+        }
+    });
+
+    grade.on('keyup', (event) => {
+        if( grade.val() !== "" && grade.val()<=100 ){
+            outerDiv.removeClass('has-error').addClass('has-success');
+            alert.removeClass("alert-warning alert-danger").addClass("alert-success");
+            alert.removeClass('show').addClass('hidden');
+
+            $("#edit-grade-alert > span").removeClass("glyphicon-exclamation-sign").addClass("glyphicon glyphicon-ok-circle");
+        }
+        else{
+            alert.removeClass('hidden').addClass('show');
+            outerDiv.removeClass('has-success').addClass('has-error');
+            alert.removeClass("alert-success").addClass("alert-danger");
+            $("#edit-grade-alert > span").removeClass("glyphicon glyphicon-ok-circle").addClass("glyphicon glyphicon-remove-circle");
+        }
+    });
+
+    grade.on('focusout', ()=>{
+        alert.removeClass('show').addClass('hidden');
+        if(grade.val() === ""){
+            outerDiv.removeClass('has-success').addClass('has-error');
+            alert.removeClass("alert-success").addClass("alert-danger");
+            $("#edit-grade-alert > span").removeClass("glyphicon glyphicon-ok-circle").addClass("glyphicon glyphicon-remove-circle");
+        }
+    });
+}
+
+function cleanUpAddFormOnEditModal(){
+    $("#nameDiv, #edit-name-alert, #edit-name-alert > span").removeAttr("class");
+    $("#courseDiv, #edit-course-alert, #edit-course-alert > span").removeAttr("class");
+    $("#gradeDiv, #edit-grade-alert, #edit-grade-alert > span").removeAttr("class");
+
+    $("#nameDiv, #courseDiv, #gradeDiv").addClass("input-group");
+    $("#edit-name-alert, #edit-course-alert, #edit-grade-alert").addClass("alert alert-warning hidden");
+    $("#edit-name-alert > span, #edit-course-alert > span, #edit-grade-alert > span").addClass("glyphicon glyphicon-exclamation-sign");
 
 }
