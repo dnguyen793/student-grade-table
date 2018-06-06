@@ -68,8 +68,9 @@ function handleStudentNameInput(){
         alert.removeClass('hidden').addClass('show');
     });
     name.on('keydown', (event) => {
+
         if( event.keyCode === 32){
-            if($('#studentName').val() === ""){
+            if($('#studentName').val() === "" ){
                 event.preventDefault();
             }
         }
@@ -117,6 +118,11 @@ function handleCourseInput(){
     let alert = $("#course-alert");
 
     course.on('keydown', (event) => {
+        if( event.keyCode === 32){
+            if($('#course').val() === "" ){
+                event.preventDefault();
+            }
+        }
         if ( event.keyCode === 191 || event.keyCode === 192 || (event.keyCode >= 186 && event.keyCode <= 188) || (event.keyCode >= 219 && event.keyCode <= 221)) {
             event.preventDefault();
         }
