@@ -98,6 +98,7 @@
             <small class="pull-right">Grade Average : <span class="avgGrade label label-default">0</span></small>
         </h3>
     </div>
+    <hr />
 
     <div class="student-add-form pull-right col-sm-3">
         <h4>Add Student</h4>
@@ -140,7 +141,6 @@
         <button type="button" class="btn-default btn-sm" style = "margin-bottom: 10px" onclick="">Cancel</button>
 
         <div class="displayError">
-            <!-- <h5>Message</h5> -->
         </div>
     </div>
 
@@ -151,7 +151,9 @@
                 <th>Student Name</th>
                 <th>Student Course</th>
                 <th>Student Grade</th>
-                <th>Operations</th>
+                <th class="hidden-xs hidden-sm">Operations</th>
+                <th class="visible-xs visible-sm hidden-md hidden-lg">Ops</th>
+
             </tr>
             </thead>
             <tbody>

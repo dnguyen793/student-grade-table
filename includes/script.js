@@ -188,10 +188,6 @@ function handleStudentGradeInput(){
 function addClickHandlersToElements(){
     $(".addBtn").on("click", handleAddClicked);
     $(".btn-default").on("click", handleCancelClick);
-    // $(".btn-info").on("click", pullRecordsFromDB);
-    // $(".input-group").on("click", function () {
-    //     $(".btn-success").text("Add").prop("disabled", false).css({'background-color':"", 'border':''});
-    // });
 
 }
 
@@ -202,6 +198,7 @@ function addClickHandlersToElements(){
        none
  */
 function handleAddClicked(event){
+    $(".displayError").empty();
     addStudent();
 }
 /***************************************************************************************************
@@ -269,7 +266,9 @@ function renderStudentOnDom( studentObj ){
     let tableRow = $("<tr>", {
         'class': "studentRow",
     });
-    let tableData = $("<td>");
+    let tableData = $("<td>", {
+        "class": "operations"
+    });
     let studentName = $("<td>",{
         'class': "studentData",
         text: studentObj.name,
@@ -693,6 +692,7 @@ function displayEditingModal(studentObj){
 */
 function closeEditingModal(){
     let modal = $('#updateModal').css('display','none');
+    cleanUpAddFormOnEditModal();
 }
 
 /***************************************************************************************************
@@ -879,4 +879,15 @@ function handleStudentGradeInputOnEditModal(){
             $("#edit-grade-alert > span").removeClass("glyphicon glyphicon-ok-circle").addClass("glyphicon glyphicon-remove-circle");
         }
     });
+}
+
+function cleanUpAddFormOnEditModal(){
+    $("#nameDiv, #edit-name-alert, #edit-name-alert > span").removeAttr("class");
+    $("#courseDiv, #edit-course-alert, #edit-course-alert > span").removeAttr("class");
+    $("#gradeDiv, #edit-grade-alert, #edit-grade-alert > span").removeAttr("class");
+
+    $("#nameDiv, #courseDiv, #gradeDiv").addClass("input-group");
+    $("#edit-name-alert, #edit-course-alert, #edit-grade-alert").addClass("alert alert-warning hidden");
+    $("#edit-name-alert > span, #edit-course-alert > span, #edit-grade-alert > span").addClass("glyphicon glyphicon-exclamation-sign");
+
 }
