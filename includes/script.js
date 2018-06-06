@@ -318,13 +318,9 @@ function renderStudentOnDom( studentObj ){
 }
 
 function handleEditButtonClick(studentObj){
-    displayEditingModal();
+    displayEditingModal(studentObj);
     displayStudentInfoInsideModal( studentObj.name, studentObj.course_name, studentObj.grade );
 
-    $(".cancelEditBtn").on("click", closeEditingModal);
-    $(".saveBtn").on("click", () => {
-        handleUpdatingNewStudentInfo(studentObj);
-    });
 }
 
 function handleDeleteStudentButton(studentObj, studentIndex){
@@ -666,8 +662,24 @@ function updateStudentFrServer( id, name, course, grade ) {
 * @params {none} 
 * @returns  {undefined}
 */
-function displayEditingModal(){
+function displayEditingModal(studentObj){
+    $(".modal-footer").empty();
+    let cancel = $("<button>", {
+        "class": "btn btn-secondary cancelEditBtn",
+        text: "Cancel"
+    });
+    let save = $("<button>", {
+        "class": "btn btn-success saveBtn",
+        text: "Save"
+    });
+    $(".modal-footer").append(cancel, save);
+
     let modal = $('#updateModal').css('display','block');
+
+    $(".cancelEditBtn").on("click", closeEditingModal);
+    $(".saveBtn").on("click", () => {
+        handleUpdatingNewStudentInfo(studentObj);
+    });
 }
 
 /***************************************************************************************************
