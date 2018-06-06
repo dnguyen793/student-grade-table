@@ -1,4 +1,6 @@
-
+.thead{
+    background-color: #f0f0f0;
+}
 
 .hidden{
     display: none;
@@ -58,4 +60,21 @@ div.modal-footer{
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
+}
+button.btn.btn-warning.btn-xs {
+    margin-right: 10px;
+}
+
+@media only screen and (max-width: 505px){
+    button.btn.btn-warning.btn-xs {
+        margin-bottom: 5px;
+        margin-right: 5px;
+        margin-left: 5px;
+    }
+
+    .buttonContainer {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
 }

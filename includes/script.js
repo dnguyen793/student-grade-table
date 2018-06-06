@@ -42,36 +42,46 @@ function initializeApp(){
 * @returns  {undefined}
 */
 function handleStudentNameInput(){
+    let outerDiv = $("#firstDiv");
     let name = $('#studentName');
-    let alert = $(".name-alert");
+    let alert = $("#name-alert");
 
     name.on('focus', ()=>{
         alert.removeClass('hidden').addClass('show');
     });
     name.on('keydown', (event) => {
+        if( event.keyCode === 32){
+            if($('#studentName').val() === ""){
+                event.preventDefault();
+            }
+        }
 
-        if (event.keyCode >= 48 && event.keyCode <= 57) {
+        if ((event.keyCode >= 48 && event.keyCode <= 57) || (event.keyCode >= 186 && event.keyCode <= 192) || (event.keyCode >= 219 && event.keyCode <= 222)) {
             event.preventDefault();
         }
     });
 
     name.on('keyup', (event) => {
         if(name.val().length > 2){
-            $(".firstDiv").removeClass('has-error').addClass('has-success');
+            outerDiv.removeClass('has-error').addClass('has-success');
             alert.removeClass("alert-warning alert-danger").addClass("alert-success");
-            $(".name-alert > span").removeClass("glyphicon-exclamation-sign").addClass("glyphicon glyphicon-ok-circle");
+            alert.removeClass('show').addClass('hidden');
+
+            $("#name-alert > span").removeClass("glyphicon-exclamation-sign").addClass("glyphicon glyphicon-ok-circle");
         }
         else{
-            $(".firstDiv").removeClass('has-success').addClass('has-error');
+            outerDiv.removeClass('has-success').addClass('has-error');
             alert.removeClass("alert-success").addClass("alert-danger");
-            $(".name-alert > span").removeClass("glyphicon glyphicon-ok-circle").addClass("glyphicon glyphicon-remove-circle");
+            $("#name-alert > span").removeClass("glyphicon glyphicon-ok-circle").addClass("glyphicon glyphicon-remove-circle");
         }
     });
 
     name.on('focusout', ()=>{
         alert.removeClass('show').addClass('hidden');
         if(name.val().length < 2){
-            $(".firstDiv").removeClass('has-success').addClass('has-error');
+            outerDiv.removeClass('has-success').addClass('has-error');
+            alert.removeClass("alert-success").addClass("alert-danger");
+            $("#name-alert > span").removeClass("glyphicon glyphicon-ok-circle").addClass("glyphicon glyphicon-remove-circle");
         }
     });
 }
@@ -84,8 +94,15 @@ function handleStudentNameInput(){
 *     
 */
 function handleCourseInput(){
+    let outerDiv = $("#secondDiv");
     let course = $('#course');
-    let alert = $(".course-alert");
+    let alert = $("#course-alert");
+
+    course.on('keydown', (event) => {
+        if ( event.keyCode === 191 || event.keyCode === 192 || (event.keyCode >= 186 && event.keyCode <= 188) || (event.keyCode >= 219 && event.keyCode <= 221)) {
+            event.preventDefault();
+        }
+    });
 
     course.on('focus', ()=>{
         alert.removeClass('hidden').addClass('show');
@@ -93,21 +110,25 @@ function handleCourseInput(){
 
     course.on('keyup', (event) => {
         if(course.val().length > 2){
-            $(".secondDiv").removeClass('has-error').addClass('has-success');
+            outerDiv.removeClass('has-error').addClass('has-success');
             alert.removeClass("alert-warning alert-danger").addClass("alert-success");
-            $(".course-alert > span").removeClass("glyphicon-exclamation-sign").addClass("glyphicon glyphicon-ok-circle");
+            alert.removeClass('show').addClass('hidden');
+
+            $("#course-alert > span").removeClass("glyphicon-exclamation-sign").addClass("glyphicon glyphicon-ok-circle");
         }
         else{
-            $(".secondDiv").removeClass('has-success').addClass('has-error');
+            outerDiv.removeClass('has-success').addClass('has-error');
             alert.removeClass("alert-success").addClass("alert-danger");
-            $(".course-alert > span").removeClass("glyphicon glyphicon-ok-circle").addClass("glyphicon glyphicon-remove-circle");
+            $("#course-alert > span").removeClass("glyphicon glyphicon-ok-circle").addClass("glyphicon glyphicon-remove-circle");
         }
     });
 
     course.on('focusout', ()=>{
         alert.removeClass('show').addClass('hidden');
         if(course.val().length < 2){
-            $(".secondDiv").removeClass('has-success').addClass('has-error');
+            outerDiv.removeClass('has-success').addClass('has-error');
+            alert.removeClass("alert-success").addClass("alert-danger");
+            $("#course-alert > span").removeClass("glyphicon glyphicon-ok-circle").addClass("glyphicon glyphicon-remove-circle");
         }
     });
 }
@@ -120,35 +141,40 @@ function handleCourseInput(){
 *     
 */
 function handleStudentGradeInput(){
+    let outerDiv = $("#thirdDiv");
     let grade = $('#studentGrade');
-    let alert = $(".grade-alert");
+    let alert = $("#grade-alert");
 
     grade.on('focus', ()=>{
         alert.removeClass('hidden').addClass('show');
     });
     grade.on('keypress', (event) => {
-        if ((event.keyCode < 48 || event.keyCode > 57)) {
+        if ( (event.keyCode < 48 || event.keyCode > 57) ) {
             event.preventDefault();
         }
     });
 
     grade.on('keyup', (event) => {
         if( grade.val() !== "" && grade.val()<=100 ){
-            $(".thirdDiv").removeClass('has-error').addClass('has-success');
+            outerDiv.removeClass('has-error').addClass('has-success');
             alert.removeClass("alert-warning alert-danger").addClass("alert-success");
-            $(".grade-alert > span").removeClass("glyphicon-exclamation-sign").addClass("glyphicon glyphicon-ok-circle");
+            alert.removeClass('show').addClass('hidden');
+
+            $("#grade-alert > span").removeClass("glyphicon-exclamation-sign").addClass("glyphicon glyphicon-ok-circle");
         }
         else{
-            $(".thirdDiv").removeClass('has-success').addClass('has-error');
+            outerDiv.removeClass('has-success').addClass('has-error');
             alert.removeClass("alert-success").addClass("alert-danger");
-            $(".grade-alert > span").removeClass("glyphicon glyphicon-ok-circle").addClass("glyphicon glyphicon-remove-circle");
+            $("#grade-alert > span").removeClass("glyphicon glyphicon-ok-circle").addClass("glyphicon glyphicon-remove-circle");
         }
     });
 
     grade.on('focusout', ()=>{
         alert.removeClass('show').addClass('hidden');
         if(grade.val() === ""){
-            $(".thirdDiv").removeClass('has-success').addClass('has-error');
+            outerDiv.removeClass('has-success').addClass('has-error');
+            alert.removeClass("alert-success").addClass("alert-danger");
+            $("#grade-alert > span").removeClass("glyphicon glyphicon-ok-circle").addClass("glyphicon glyphicon-remove-circle");
         }
     });
 }
@@ -163,9 +189,9 @@ function addClickHandlersToElements(){
     $(".addBtn").on("click", handleAddClicked);
     $(".btn-default").on("click", handleCancelClick);
     // $(".btn-info").on("click", pullRecordsFromDB);
-    $(".input-group").on("click", function () {
-        $(".btn-success").text("Add").prop("disabled", false).css({'background-color':"", 'border':''});
-    });
+    // $(".input-group").on("click", function () {
+    //     $(".btn-success").text("Add").prop("disabled", false).css({'background-color':"", 'border':''});
+    // });
 
 }
 
@@ -186,6 +212,7 @@ function handleAddClicked(event){
  */
 function handleCancelClick(){
     clearAddStudentFormInputs();
+    cleanUpAddForm();
 }
 /***************************************************************************************************
  * addStudent - creates a student objects based on input fields in the form and adds the object to global student array
@@ -194,31 +221,35 @@ function handleCancelClick(){
  * @calls clearAddStudentFormInputs, updateStudentList
  */
 function addStudent(){
-    var studentObj = {};
     var studentName = $("#studentName").val();
     var studentCourse = $("#course").val();
     var studentGrade = $("#studentGrade").val();
 
-    if( !studentName || !studentCourse || !studentGrade || $(".firstDiv").hasClass('has-error') || $(".secondDiv").hasClass('has-error') || $(".thirdDiv").hasClass('has-error') ){
-        console.log('theres has error');
-        $(".firstDiv").removeClass('has-success').addClass('has-error');
-        $(".secondDiv").removeClass('has-success').addClass('has-error');
-        $(".thirdDiv").removeClass('has-success').addClass('has-error');
+    if( !studentName ){
+        $("#firstDiv").removeClass('has-success').addClass('has-error');
+    }
+    if( !studentCourse ){
+        $("#secondDiv").removeClass('has-success').addClass('has-error');
+    }
+    if( !studentGrade ){
+        $("#thirdDiv").removeClass('has-success').addClass('has-error');
 
+    }
+    if( $("#firstDiv").hasClass('has-error') || $("#secondDiv").hasClass('has-error') || $("#thirdDiv").hasClass('has-error') ){
+        let error = $("<h5>", {
+            text: "Please correct the above error!",
+            style: "color: red"
+        });
+        $(".displayError").append(error);
+
+        setInterval(()=>{
+            $(".displayError").empty();            
+        }, 2300);
+    
     }
     else{
 
-        studentObj.name = studentName;
-        studentObj.course_name = studentCourse;
-        studentObj.grade = parseInt(studentGrade);
-
-        student_array.push(studentObj);
         addingDataToServer(studentName, studentCourse, parseInt(studentGrade));
-        
-        // var result = addingDataToServer();
-        $(".btn-success").text("Student Added").prop("disabled", true).css({'background-color':'#898989', 'border':'black'});
-        clearAddStudentFormInputs();
-        updateStudentList(student_array);
     }
 }
 /***************************************************************************************************
@@ -235,55 +266,53 @@ function clearAddStudentFormInputs(){
  * @param {object} studentObj a single student object with course, name, and grade inside
  */
 function renderStudentOnDom( studentObj ){
-    var tableRow = $("<tr>", {
+    let tableRow = $("<tr>", {
         'class': "studentRow",
     });
-    var tableData = $("<td>");
-    var studentName = $("<td>",{
+    let tableData = $("<td>");
+    let studentName = $("<td>",{
         'class': "studentData",
         text: studentObj.name,
     });
-    var studentCourse = $("<td>",{
+    let studentCourse = $("<td>",{
         'class': "studentData",
         text: studentObj.course_name,
     });
-    var studentGrade = $("<td>",{
+    let studentGrade = $("<td>",{
         'class': "studentData",
         text: studentObj.grade,
     });
 
-    var delButton = $("<button>", {
+    let delButton = $("<button>", {
         //class is in quote because of es6
        'class': "btn btn-danger btn-xs",
         text: "Delete",
         //this anonymous function is to take advantage of the lexical scope
         on: {
             "click": function () {
-
-                handleDeleteStudentButton(studentObj);
-
-                // tableRow.remove();
-
-  
-
+                let studentIndex = student_array.indexOf(studentObj);
+                handleDeleteStudentButton(studentObj, studentIndex);
             }
         }
     });
 
-    var editBtn = $("<button>", {
+    let editBtn = $("<button>", {
         'class': "btn btn-warning btn-xs",
         text: "Edit",
-        style: "margin-right: 10px",
+        // style: "margin-right: 10px",
         on: {
             "click": () => {
-                console.log('edit btn clicked for:', studentObj);
                 handleEditButtonClick(studentObj);
             }
         }
     });
 
-    // button[0].studentObj = studentObj;
-    var buttons = tableData.append(editBtn, delButton);
+    let buttonContainer = $("<div>", {
+        "class": "buttonContainer"
+    });
+
+    buttonContainer.append(editBtn, delButton);
+    let buttons = tableData.append(buttonContainer);
     tableRow.append(studentName, studentCourse, studentGrade, buttons);
     $(".student-list tbody").append(tableRow);
 }
@@ -298,10 +327,11 @@ function handleEditButtonClick(studentObj){
     });
 }
 
-function handleDeleteStudentButton(studentObj){
-    displayDeletingModal( studentObj );
+function handleDeleteStudentButton(studentObj, studentIndex){
+    displayDeletingModal( studentObj, studentIndex );
 
 }
+
 /***************************************************************************************************
  * updateStudentList - centralized function to update the average and call student list update
  * @param students {array} the array of student objects
@@ -310,12 +340,14 @@ function handleDeleteStudentButton(studentObj){
  */
 function updateStudentList( studentArray ){
     $(".student-list tbody").empty();
+
     for(var index = 0; index < studentArray.length; index++){
         renderStudentOnDom(studentArray[index]);
     }
     var averageGrade = calculateGradeAverage( studentArray );
     renderGradeAverage( Math.floor(averageGrade) );
 }
+
 /***************************************************************************************************
  * calculateGradeAverage - loop through the global student array and calculate average grade and return that value
  * @param: {array} students  the array of student objects
@@ -324,14 +356,22 @@ function updateStudentList( studentArray ){
 function calculateGradeAverage( studentArray ){
     var accumGrade = null;
     var studentCount = 0;
+    let avgGrade = null;
     for(var i = 0; i < studentArray.length; i++){
         accumGrade += parseFloat(studentArray[i].grade);
         studentCount++;
     }
 
-    var avgGrade = accumGrade/studentCount;
+
+    if( !studentCount ){
+        avgGrade = 0;
+    }
+    else{
+        avgGrade = accumGrade/studentCount;
+    }
     return avgGrade;
 }
+
 /***************************************************************************************************
  * renderGradeAverage - updates the on-page grade average
  * @param: {number} average    the grade average
@@ -342,37 +382,7 @@ function renderGradeAverage( averageGrade ){
     $(".avgGrade").text(averageGrade);
 }
 
-//Using the LearningFuze SGT API pull records from the DB using an AJAX call
-// function pullRecordsFromDB() {
-//     console.log('1) getData called from button click');
-//     var ajaxConfig = {
-//         dataType:'json',
-//         method: 'post',
-//         url: 'https://s-apis.learningfuze.com/sgt/get',
-//         data: {
-//           'api_key': 'X9BhkpbIMK'
-//         },
-//         success: function (data) {
-//             console.log('2) AJAX Success function called, with the following result:', data);
-//             var studentData = data;
-//             pushStudentRecordsIntoArray(studentData);
-//             updateStudentList(student_array);
 
-//         },
-//         error: function () {
-//             console.log("Trouble getting data");
-//         }
-//     }
-
-//     console.log('3) Making AJAX request');
-//     $.ajax(ajaxConfig);
-
-// }
-// X9BhkpbIMK
-
-// get all task data fr resources and then render tasks to dom
-// input: none
-// output: none
 function pullRecordsFromDB(){
     $.ajax({
         url: "server/data.php?action=readAll",
@@ -380,15 +390,39 @@ function pullRecordsFromDB(){
         method: 'get',
         success: function(response){
             console.log('data', response);
-            if(response.studentData.length>0){
-                var studentData = response.studentData;
-                pushStudentRecordsIntoArray(studentData);
-                updateStudentList(studentData);            
+            if(response.success){
+            
+                if(response.studentData.length>0){
+                    var studentData = response.studentData;
+                    pushStudentRecordsIntoArray(studentData);
+                    updateStudentList(studentData);            
+                }
             }
             else{
-                console.log('something happened');
+                $(".displayError").empty();
+
+                let error = $("<h5>", {
+                    text: response.errors[0],
+                    style: "color: red"
+                });
+                $(".displayError").append(error);
+                setInterval( ()=>{
+                    $(".displayError").empty();
+                }, 2300);
             }
+        },
+        error: function () {
+            $(".displayError").empty();
+            let error = $("<h5>", {
+                text: response.errors[0],
+                style: "color: red"
+            });
+            $(".displayError").append(error);
+            setInterval( ()=>{
+                $(".displayError").empty();
+            }, 2300);
         }
+
     });
 }
 
@@ -402,7 +436,6 @@ function pushStudentRecordsIntoArray( studentData ) {
     for(var index = 0; index < studentData.length; index++){
         student_array.push(studentData[index]);
     }
-    console.log('student_array:', student_array);
 }
 
 /***************************************************************************************************
@@ -422,21 +455,57 @@ function addingDataToServer(name, course, grade) {
         url: 'server/data.php?action=insert',
         data: student,
             // 'api_key': 'X9BhkpbIMK',
-        //     name: student_array[student_array.length-1].name,
-        //     course_name: student_array[student_array.length-1].course,
-        //     grade: student_array[student_array.length-1].grade,
+
         success: function (response) {
             console.log('insert response:', response);
-            student_array[student_array.length-1].id = response['id'];
-            console.log('last student', student_array[student_array.length-1]);
+            if(response.success){
+   
+                student_array.push(student);
+                student_array[student_array.length-1].id = response['id'] ;
+                console.log('last student', student_array[student_array.length-1]);
+                
+                $(".displayError").empty();
+                let message = $("<h5>", {
+                    text: "Student Successfully Added!",
+                    style: "color: green"
+                });
+                $(".displayError").append(message);
 
+                setInterval( ()=>{
+                    $(".displayError").empty();
+                }, 2300);
+
+                clearAddStudentFormInputs();
+                cleanUpAddForm();
+                updateStudentList(student_array);
+            }
+            else{
+                $(".displayError").empty();
+
+                let error = $("<h5>", {
+                    text: response.errors[0],
+                    style: "color: red"
+                });
+                $(".displayError").append(error);
+                setInterval( ()=>{
+                    $(".displayError").empty();
+                }, 2300);
+            }
         },
         error: function () {
-            console.log("Trouble getting data");
+            $(".displayError").empty();
+
+            let error = $("<h5>", {
+                text: response.errors[0],
+                style: "color: red"
+            });
+            $(".displayError").append(error);
+            setInterval( ()=>{
+                $(".displayError").empty();
+            }, 2300);
         }
     }
 
-    console.log('3) Making AJAX request');
     $.ajax(ajaxConfig);
 }
 
@@ -446,7 +515,7 @@ function addingDataToServer(name, course, grade) {
  * @returns {undefined}
  */
 function deleteStudentFrServer( student, studentIndex ) {
-    console.log('del student:', student);
+    console.log('del student:', student.id, studentIndex);
     var ajaxConfig = {
         dataType:'json',
         method: 'post',
@@ -463,25 +532,33 @@ function deleteStudentFrServer( student, studentIndex ) {
                 closeDeletingModal();
             }
             else{
+                $(".displayError").empty();
+
                 let error = $("<h5>", {
-                    text: "ERROR - Please try again later!",
+                    text: response.errors[0],
                     style: "color: red"
                 });
                 $(".del-modal-body").append(error);
+                setInterval( ()=>{
+                    $(".displayError").empty();
+                }, 2300);
             }
 
         },
         error: function () {
-            console.log("Trouble getting data");
+            $(".displayError").empty();
+
             let error = $("<h5>", {
-                text: "ERROR - Please try again later!",
+                text: response.errors[0],
                 style: "color: red"
             });
             $(".del-modal-body").append(error);
+            setInterval( ()=>{
+                $(".displayError").empty();
+            }, 2300);
         }
     }
 
-    console.log('3) Making AJAX request');
     $.ajax(ajaxConfig);
 }
 
@@ -552,22 +629,32 @@ function updateStudentFrServer( id, name, course, grade ) {
                 closeEditingModal();
             }
             else{
+                $(".displayError").empty();
+
                 let error = $("<h5>", {
-                    text: "ERROR - Please try again later!",
+                    text: response.errors[0],
                     style: "color: red"
                 });
                 $(".modal-body .error").append(error);
+                setInterval( ()=>{
+                    $(".displayError").empty();
+                }, 2300);
             }
 
 
         },
         error: function () {
             console.log("Trouble getting data");
+            $(".displayError").empty();
+
             let error = $("<h5>", {
-                text: "ERROR - Please try again later!",
+                text: response.errors[0],
                 style: "color: red"
             });
             $(".modal-body .error").append(error);
+            setInterval( ()=>{
+                $(".displayError").empty();
+            }, 2300);
         }
     }
 
@@ -597,10 +684,10 @@ function closeEditingModal(){
 * @params {none} 
 * @returns  {undefined}
 */
-function displayDeletingModal( studentObj ){
+function displayDeletingModal( studentObj, studentIndex ){
     $(".del-modal-body").empty();
+    $("#del-modal-footer").empty();
 
-    console.log('student', studentObj);
     let name = $("<h5>", {
         text: 'Name: ' + studentObj.name
     });
@@ -611,12 +698,22 @@ function displayDeletingModal( studentObj ){
         text: 'Course: ' + studentObj.course_name,
     })
     $(".del-modal-body").append(name, course, grade);
+
+    let cancelBtn = $("<button>", {
+        text: "Cancel",
+        "class": "btn btn-secondary cancelDelBtn"
+    });
+    let delBtn = $("<button>", {
+        text: "Delete",
+        "class": "btn btn-danger delBtn"
+    })
+    $("#del-modal-footer").append(cancelBtn, delBtn);
+
     let modal = $('#delModal').css('display','block');
 
 
-    $(".del-footer").on("click", ".cancelDelBtn", closeDeletingModal);
-    $(".del-footer").on("click", ".delBtn", ()=>{
-        var studentIndex = student_array.indexOf(studentObj);
+    $(".cancelDelBtn").on("click", closeDeletingModal);
+    $(".delBtn").on("click", ()=>{
         console.log( "Deleting:", studentIndex, studentObj);
         deleteStudentFrServer(student_array[studentIndex], studentIndex);
 
@@ -631,4 +728,21 @@ function displayDeletingModal( studentObj ){
 */
 function closeDeletingModal(){
     let modal = $('#delModal').css('display','none');
+}
+
+/***************************************************************************************************
+* cleanUpAddForm - restore the form to its original state
+* @params {none} 
+* @returns  {undefined}
+*/
+
+function cleanUpAddForm(){
+    $("#firstDiv, #name-alert, #name-alert > span").removeAttr("class");
+    $("#secondDiv, #course-alert, #course-alert > span").removeAttr("class");
+    $("#thirdDiv, #grade-alert, #grade-alert > span").removeAttr("class");
+
+    $("#firstDiv, #secondDiv, #thirdDiv").addClass("input-group");
+    $("#name-alert, #course-alert, #grade-alert").addClass("alert alert-warning hidden");
+    $("#name-alert > span, #course-alert > span, #grade-alert > span").addClass("glyphicon glyphicon-exclamation-sign");
+
 }

@@ -14,7 +14,7 @@
 <div id="updateModal" class="updateModal" role="dialog">
     <div class="modal-content">
         <div class="modal-header">
-             <h3 class="modal-title bg-warning">Editing Student</h3>
+             <h3 class="modal-title bg-warning">Edit Student</h3>
         </div>
 
         <div class="modal-body">
@@ -64,7 +64,7 @@
 
         </div>
 
-        <div class="modal-footer del-footer">
+        <div class="modal-footer del-footer" id="del-modal-footer">
             <button class="btn btn-secondary cancelDelBtn">Cancel</button>
             <button class="btn btn-danger delBtn">Delete</button>
         </div>
@@ -75,7 +75,7 @@
 
 <div class="container">
 
-    <div class="row">
+    <div>
         <!-- only show this element when the isnt on mobile -->
         <h1 class="hidden-xs hidden-sm">Student Grade Table
             <small class="pull-right">Grade Average : <span class="avgGrade label label-default">0</span></small>
@@ -88,51 +88,52 @@
 
     <div class="student-add-form pull-right col-sm-3">
         <h4>Add Student</h4>
-        <div class="input-group firstDiv" style = "margin-bottom: 10px">
+        <div class="input-group" id="firstDiv" style = "margin-bottom: 10px">
             <span class="input-group-addon">
                 <span class="glyphicon glyphicon-user"></span>
             </span>
             <input type="text" class="form-control" name="studentName" id="studentName" placeholder="Student Name" value="">
         </div>
-        <div class="alert alert-warning name-alert hidden" role="alert" style="padding: 5px 15px">
+        <div class="alert alert-warning hidden" id="name-alert" role="alert" style="padding: 5px 15px">
             <span class="glyphicon glyphicon-exclamation-sign"></span>
             Must contain at least 3 letters
         </div>
 
-        <div class="input-group secondDiv" style = "margin-bottom: 10px">
+        <div class="input-group" id="secondDiv" style = "margin-bottom: 10px">
             <span class="input-group-addon">
                 <span class="glyphicon glyphicon-list-alt"></span>
             </span>
             <input type="text" class="form-control" name="course" id="course" value=""
                    placeholder="Student Course">
         </div>
-        <div class="alert alert-warning course-alert hidden" role="alert" style="padding: 5px 15px">
+        <div class="alert alert-warning hidden" id="course-alert" role="alert" style="padding: 5px 15px">
             <span class="glyphicon glyphicon-exclamation-sign"></span>
             Course must be valid
         </div>
 
-        <div class="input-group thirdDiv" style = "margin-bottom: 10px">
+        <div class="input-group" id="thirdDiv" style = "margin-bottom: 10px">
             <span class="input-group-addon">
                 <span class="glyphicon glyphicon-education"></span>
             </span>
             <input type="text" class="form-control" name="studentGrade" id="studentGrade" value=""
                    placeholder="Student Grade">
         </div>
-        <div class="alert alert-warning grade-alert hidden" role="alert" style="padding: 5px 15px">
+        <div class="alert alert-warning hidden" id="grade-alert" role="alert" style="padding: 5px 15px">
             <span class="glyphicon glyphicon-exclamation-sign"></span>
             Must be between 0-100
         </div>
 
-        <button type="button" class="btn-success btn-outline-light btn-sm addBtn" style = "margin-bottom: 10px" onclick="">&nbsp &nbsp <span class="glyphicon glyphicon-plus"></span> Add &nbsp &nbsp</button>
-        <button type="button" class="btn-default btn-sm" style = "margin-bottom: 10px" onclick="">&nbsp &nbsp Cancel &nbsp&nbsp</button>
-        <!-- <div>
-        <button type="button" class="btn-info btn-sm" style = "margin-bottom: 10px" onclick="">Get Data From Server</button>
-        </div> -->
+        <button type="button" class="btn-success btn-outline-light btn-sm addBtn" style = "margin-bottom: 10px" onclick=""><span class="glyphicon glyphicon-plus"></span> Add</button>
+        <button type="button" class="btn-default btn-sm" style = "margin-bottom: 10px" onclick="">Cancel</button>
+
+        <div class="displayError">
+            <!-- <h5>Message</h5> -->
+        </div>
     </div>
 
     <div class="student-list-container pull-left col-sm-9">
-        <table class="student-list table">
-            <thead>
+        <table class="student-list table table-hover">
+            <thead class="thead">
             <tr>
                 <th>Student Name</th>
                 <th>Student Course</th>
@@ -141,26 +142,7 @@
             </tr>
             </thead>
             <tbody>
-            <!--<tr>-->
-                <!--<td>Eric Johnson</td>-->
-                <!--<td>Math</td>-->
-                <!--<td>80</td>-->
-                <!--<td> <button type="button" class="btn btn-danger btn-xs">Delete</button></td>-->
-            <!--</tr>-->
 
-            <!--<tr>-->
-                <!--<td>Daniel Paschal</td>-->
-                <!--<td>Science</td>-->
-                <!--<td>100</td>-->
-                <!--<td> <button type="button" class="btn btn-danger btn-xs">Delete</button></td>-->
-            <!--</tr>-->
-
-            <!--<tr>-->
-                <!--<td>Eric Johnson</td>-->
-                <!--<td>Science</td>-->
-                <!--<td>60</td>-->
-                <!--<td> <button type="button" class="btn btn-danger btn-xs">Delete</button></td>-->
-            <!--</tr>-->
             </tbody>
         </table>
     </div>
