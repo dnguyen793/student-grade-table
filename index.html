@@ -19,26 +19,39 @@
 
         <div class="modal-body">
             <h5>Enter the new info:</h5>
-            <div class="input-group" style = "margin-bottom: 10px">
+            <div class="input-group" id="nameDiv" style = "margin-bottom: 10px">
                 <span class="input-group-addon">
                     <span class="glyphicon glyphicon-user"></span>
                 </span>
                 <input type="text" class="form-control" name="studentName" id="newStudentName" value="" autofocus>
             </div>
+            <div class="alert alert-warning hidden" id="edit-name-alert" role="alert" style="padding: 5px 15px">
+                <span class="glyphicon glyphicon-exclamation-sign"></span>
+                Must contain at least 3 letters
+            </div>
 
-            <div class="input-group" style = "margin-bottom: 10px">
+            <div class="input-group" id="courseDiv" style = "margin-bottom: 10px">
                 <span class="input-group-addon">
                     <span class="glyphicon glyphicon-list-alt"></span>
                 </span>
                 <input type="text" class="form-control" name="course" id="newStudentCourse" value="">
             </div>
+            <div class="alert alert-warning hidden" id="edit-course-alert" role="alert" style="padding: 5px 15px">
+                <span class="glyphicon glyphicon-exclamation-sign"></span>
+                Course name required
+            </div>
 
-            <div class="input-group">
+            <div class="input-group" id="gradeDiv" style = "margin-bottom: 10px">
                 <span class="input-group-addon">
                     <span class="glyphicon glyphicon-education"></span>
                 </span>
                 <input type="text" class="form-control" name="studentGrade" id="newStudentGrade" value="">
             </div>
+            <div class="alert alert-warning hidden" id="edit-grade-alert" role="alert" style="padding: 5px 15px">
+                <span class="glyphicon glyphicon-exclamation-sign"></span>
+                Must be between 0-100
+            </div>
+        
 
             <div class="error"></div>
         </div>
@@ -108,7 +121,7 @@
         </div>
         <div class="alert alert-warning hidden" id="course-alert" role="alert" style="padding: 5px 15px">
             <span class="glyphicon glyphicon-exclamation-sign"></span>
-            Course must be valid
+            Course name required
         </div>
 
         <div class="input-group" id="thirdDiv" style = "margin-bottom: 10px">

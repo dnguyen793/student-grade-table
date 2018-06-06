@@ -663,6 +663,10 @@ function updateStudentFrServer( id, name, course, grade ) {
 * @returns  {undefined}
 */
 function displayEditingModal(studentObj){
+    $("#newStudentName").on('focusin', handleStudentNameInputOnEditModal());
+    $("#newStudentCourse").on('focusin', handleCourseInputOnEditModal());
+    $("#newStudentGrade").on('focusin', handleStudentGradeInputOnEditModal());
+
     $(".modal-footer").empty();
     let cancel = $("<button>", {
         "class": "btn btn-secondary cancelEditBtn",
@@ -757,4 +761,122 @@ function cleanUpAddForm(){
     $("#name-alert, #course-alert, #grade-alert").addClass("alert alert-warning hidden");
     $("#name-alert > span, #course-alert > span, #grade-alert > span").addClass("glyphicon glyphicon-exclamation-sign");
 
+}
+
+function handleStudentNameInputOnEditModal(){
+    let outerDiv = $("#nameDiv");
+    let name = $('#newStudentName');
+    let alert = $("#edit-name-alert");
+
+    name.on('keydown', (event) => {
+        if( event.keyCode === 32){
+            if(name.val() === ""){
+                event.preventDefault();
+            }
+        }
+
+        if ((event.keyCode >= 48 && event.keyCode <= 57) || (event.keyCode >= 186 && event.keyCode <= 192) || (event.keyCode >= 219 && event.keyCode <= 222)) {
+            event.preventDefault();
+        }
+    });
+
+    name.on('keyup', (event) => {
+        if(name.val().length > 2){
+            outerDiv.removeClass('has-error').addClass('has-success');
+            alert.removeClass("alert-warning alert-danger").addClass("alert-success");
+            alert.removeClass('show').addClass('hidden');
+
+            $("#edit-name-alert > span").removeClass("glyphicon-exclamation-sign").addClass("glyphicon glyphicon-ok-circle");
+        }
+        else{
+            alert.removeClass('hidden').addClass('show');
+            outerDiv.removeClass('has-success').addClass('has-error');
+            alert.removeClass("alert-success").addClass("alert-danger");
+            $("#edit-name-alert > span").removeClass("glyphicon glyphicon-ok-circle").addClass("glyphicon glyphicon-remove-circle");
+        }
+    });
+
+    name.on('focusout', ()=>{
+        alert.removeClass('show').addClass('hidden');
+        if(name.val().length < 2 || name.val()===""){
+            outerDiv.removeClass('has-success').addClass('has-error');
+            alert.removeClass("alert-success").addClass("alert-danger");
+            $("#edit-name-alert > span").removeClass("glyphicon glyphicon-ok-circle").addClass("glyphicon glyphicon-remove-circle");
+        }
+    });
+}
+
+
+function handleCourseInputOnEditModal(){
+    let outerDiv = $("#courseDiv");
+    let course = $('#newStudentCourse');
+    let alert = $("#edit-course-alert");
+
+    course.on('keydown', (event) => {
+        if ( event.keyCode === 191 || event.keyCode === 192 || (event.keyCode >= 186 && event.keyCode <= 188) || (event.keyCode >= 219 && event.keyCode <= 221)) {
+            event.preventDefault();
+        }
+    });
+
+    course.on('keyup', (event) => {
+        if(course.val().length > 2){
+            outerDiv.removeClass('has-error').addClass('has-success');
+            alert.removeClass("alert-warning alert-danger").addClass("alert-success");
+            alert.removeClass('show').addClass('hidden');
+
+            $("#edit-course-alert > span").removeClass("glyphicon-exclamation-sign").addClass("glyphicon glyphicon-ok-circle");
+        }
+        else{
+            alert.removeClass('hidden').addClass('show');
+            outerDiv.removeClass('has-success').addClass('has-error');
+            alert.removeClass("alert-success").addClass("alert-danger");
+            $("#edit-course-alert > span").removeClass("glyphicon glyphicon-ok-circle").addClass("glyphicon glyphicon-remove-circle");
+        }
+    });
+
+    course.on('focusout', ()=>{
+        alert.removeClass('show').addClass('hidden');
+        if(course.val().length < 2 || course.val()===""){
+            outerDiv.removeClass('has-success').addClass('has-error');
+            alert.removeClass("alert-success").addClass("alert-danger");
+            $("#edit-course-alert > span").removeClass("glyphicon glyphicon-ok-circle").addClass("glyphicon glyphicon-remove-circle");
+        }
+    });
+}
+
+function handleStudentGradeInputOnEditModal(){
+    let outerDiv = $("#gradeDiv");
+    let grade = $('#newStudentGrade');
+    let alert = $("#edit-grade-alert");
+
+    grade.on('keypress', (event) => {
+        if ( (event.keyCode < 48 || event.keyCode > 57) ) {
+            event.preventDefault();
+        }
+    });
+
+    grade.on('keyup', (event) => {
+        if( grade.val() !== "" && grade.val()<=100 ){
+            outerDiv.removeClass('has-error').addClass('has-success');
+            alert.removeClass("alert-warning alert-danger").addClass("alert-success");
+            alert.removeClass('show').addClass('hidden');
+
+            $("#edit-grade-alert > span").removeClass("glyphicon-exclamation-sign").addClass("glyphicon glyphicon-ok-circle");
+        }
+        else{
+            alert.removeClass('hidden').addClass('show');
+            outerDiv.removeClass('has-success').addClass('has-error');
+            alert.removeClass("alert-success").addClass("alert-danger");
+            $("#edit-grade-alert > span").removeClass("glyphicon glyphicon-ok-circle").addClass("glyphicon glyphicon-remove-circle");
+        }
+    });
+
+    grade.on('focusout', ()=>{
+        alert.removeClass('show').addClass('hidden');
+        if(grade.val() === ""){
+            outerDiv.removeClass('has-success').addClass('has-error');
+            alert.removeClass("alert-success").addClass("alert-danger");
+            $("#edit-grade-alert > span").removeClass("glyphicon glyphicon-ok-circle").addClass("glyphicon glyphicon-remove-circle");
+        }
+    });
 }
