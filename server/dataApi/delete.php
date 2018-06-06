@@ -7,13 +7,17 @@ $studentId = $_POST['student_id'];
 //if not, add an appropriate error to errors
 
 //write a query that deletes the student by the given student ID  
-$query = "DELETE FROM student_data WHERE id = $studentId";
+$query = "DELETE FROM student_data WHERE id = ? ";
+$stmt = $conn->prepare($query);
+$stmt->bind_param("i", $studentId);
+$stmt->execute();
 
 //send the query to the database, store the result of the query into $result
-$result = mysqli_query($conn, $query);
+$result = $stmt->affected_rows;
+$stmt->close();
+
 $output = [
 	'success' => false,
-	'deleted' => null,
 	'errors' => []
 ];
 
@@ -24,14 +28,13 @@ if(!$result){
 }
 else{ 
 	//check if the number of affected rows is 1
-	if( $row = mysqli_affected_rows($conn) == 1 ){
+	if( $result == 1 ){
 		//if it did, change output success to true
 		$output['success'] = true;
-		$output['deleted'] = $row;
 	}
 	else{
-	//if not, add to the errors: 'delete error'
-	$output['errors'][] = 'Delete error - Unable to delete student';
+		//if not, add to the errors: 'delete error'
+		$output['errors'][] = 'Delete error - Unable to delete student';
 	}
 }
 
