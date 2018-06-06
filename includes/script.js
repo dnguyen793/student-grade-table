@@ -428,7 +428,7 @@ function pullRecordsFromDB(){
         error: function () {
             $(".displayError").empty();
             let error = $("<h5>", {
-                text: response.errors[0],
+                text: "Unable to connect to the server",
                 style: "color: red"
             });
             $(".displayError").append(error);
@@ -506,11 +506,11 @@ function addingDataToServer(name, course, grade) {
                 }, 2300);
             }
         },
-        error: function () {
+        error: function (response) {
             $(".displayError").empty();
 
             let error = $("<h5>", {
-                text: response.errors[0],
+                text: "Unable to connect to the server",
                 style: "color: red"
             });
             $(".displayError").append(error);
@@ -559,11 +559,11 @@ function deleteStudentFrServer( student, studentIndex ) {
             }
 
         },
-        error: function () {
+        error: function (response) {
             $(".displayError").empty();
 
             let error = $("<h5>", {
-                text: response.errors[0],
+                text: "Unable to connect to the server",
                 style: "color: red"
             });
             $(".del-modal-body").append(error);
@@ -657,12 +657,12 @@ function updateStudentFrServer( id, name, course, grade ) {
 
 
         },
-        error: function () {
+        error: function (response) {
             console.log("Trouble getting data");
             $(".modal-body .error").empty();
 
             let error = $("<h5>", {
-                text: response.errors[0],
+                text: "Unable to connect to the server",
                 style: "color: red"
             });
             $(".modal-body .error").append(error);

@@ -2,29 +2,32 @@
 
 require_once("mysql_credentials.php");
 
-// print_r( $_POST);
-// echo $_POST['name'];
-// echo $_POST['course_name'];
-// echo $_POST['grade'];
-
 // //check if you have all the data you need from the client-side call.  
 // //if not, add an appropriate error to errors
 if(empty($_POST['name']) || empty($_POST['course_name']) || empty($_POST['grade'])){
 	exit('missing data');
 };
 
-$studentName = $_POST['name'];
-$studentCourse = $_POST['course_name'];
-$studentGrade = $_POST['grade'];
+$studentName = stripcslashes($_POST['name']);
+$studentCourse = stripcslashes($_POST['course_name']);
+$studentGrade = intval($_POST['grade']);
 
-$studentName = stripcslashes($studentName);
-$studentCourse = stripcslashes($studentCourse);
-$studentGrade = stripcslashes($studentGrade);
+$sanitizedName = $conn->real_escape_string( $studentName);
+$sanitizedCourse = $conn->real_escape_string( $studentCourse);
 
-// //write a query that inserts the data into the database.  remember that ID doesn't need to be set as it is auto incrementing
-$query = "INSERT INTO student_data ( name, grade, course_name) VALUES ( '$studentName', '$studentGrade', '$studentCourse')";
+
+//write a query that inserts the data into the database.  remember that ID doesn't need to be set as it is auto incrementing
+$query = "INSERT INTO student_data ( name, grade, course_name) VALUES ( ?, ?, ?)";
+$stmt = $conn->prepare($query);
+$stmt->bind_param("sis", $sanitizedName, $studentGrade, $sanitizedCourse);
+$stmt->execute();
+
 //send the query to the database, store the result of the query into $result
-$result = mysqli_query($conn, $query);
+// $result = mysqli_query($conn, $query);
+// $result = $conn->insert_id;
+$result = $stmt->affected_rows;
+$stmt->close();
+
 $output = [
 	'success' => false,
 	'id' => null,
@@ -34,15 +37,16 @@ $output = [
 //check if $result is empty.
 if(!$result){
 	//if it is, add 'database error' to errors
-	$output['errors'][] = 'Database connection error';
+	$output['errors'][] = 'Database error';
 }
 else{
 	//check if the number of affected rows is 1
-	if( mysqli_affected_rows($conn) == 1 ){
+	if( $result === 1 ){
 		//if it did, change output success to true
 		$output['success'] = true;
 		//get the insert ID of the row that was added
-		$new_id = mysqli_insert_id($conn);
+		// $new_id = mysqli_insert_id($conn);
+		$new_id = $conn->insert_id;
 		//add 'insertID' to $outut and set the value to the row's insert ID
 		$output['id'] = $new_id;
 	}
@@ -51,6 +55,5 @@ else{
 		$output['errors'][] = 'Insert error - Unable to add student';
 	}
 }
-
 
 ?>  

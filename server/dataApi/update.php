@@ -8,11 +8,12 @@ if(empty($_POST['id']) ||empty($_POST['newName']) || empty($_POST['newCourse']) 
 	exit('missing data');
 };
 $id = $_POST['id'];
-$newName = $_POST['newName'];
-$newCourse = $_POST['newCourse'];
-$newGrade = $_POST['newGrade'];
+$newName = stripcslashes($_POST['newName']);
+$newCourse = stripcslashes($_POST['newCourse']);
+$newGrade = intval($_POST['newGrade']);
 
-$id = 
+$sanitizedName = $mysqli->real_escape_string($newName);
+$sanitizedCourse = $mysqli->real_escape_string($newCourse);
 
 //write a query that updates the data at the given student ID.  
 $query = "UPDATE `student_data` SET `name`='$newName',`grade`='$newGrade',`course_name`='$newCourse' WHERE `id` = '$id'";
