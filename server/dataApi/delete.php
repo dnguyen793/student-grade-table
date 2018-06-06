@@ -20,7 +20,7 @@ $output = [
 //check if $result is empty.  
 if(!$result){
 	//if it is, add 'database error' to errors
-	$output['errors'][] = 'database error';
+	$output['errors'][] = 'Database connection error';
 }
 else{ 
 	//check if the number of affected rows is 1
@@ -31,7 +31,7 @@ else{
 	}
 	else{
 	//if not, add to the errors: 'delete error'
-	$output['errors'][] = 'delete error';
+	$output['errors'][] = 'Delete error - Unable to delete student';
 	}
 }
 

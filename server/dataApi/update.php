@@ -15,7 +15,7 @@ $newGrade = $_POST['newGrade'];
 $id = 
 
 //write a query that updates the data at the given student ID.  
-$query = "UPDATE `student_data` SET `name`='$newName',`grade`='$newGrade',`course_name`='$newCourse' WHERE id = '$id'";
+$query = "UPDATE `student_data` SET `name`='$newName',`grade`='$newGrade',`course_name`='$newCourse' WHERE `id` = '$id'";
 
 //send the query to the database, store the result of the query into $result
 $result = mysqli_query($conn, $query);
@@ -27,7 +27,7 @@ $output = [
 //check if $result is empty. 
 if(!$result){ 
 	//if it is, add 'database error' to errors
-	$output['errors'][] = 'database error';
+	$output['errors'][] = 'Database connection error';
 }
 else{
 	//check if the number of affected rows is 1.  
@@ -35,9 +35,13 @@ else{
 		//if it did, change output success to true
 		$output['success'] = true;
 	}
+	else if( $row = mysqli_affected_rows($conn) === 0 ){
+		//when user enter the same info as the one already existed in the server
+		$output['success'] = true;
+	}
 	else{
 		//if not, add to the errors: 'update error'
-		$output['errors'][] = 'update error';
+		$output['errors'][] = 'Update error - Cant update student';
 	}
 } 
 
