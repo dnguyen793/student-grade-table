@@ -31,29 +31,24 @@ function initializeApp(){
     $("#course").on('focusin', handleCourseInput());
     $("#studentGrade").on('focusin', handleStudentGradeInput());
     
-    // let editModal = $('#updateModal');
+    closeModalOnClickOutsideModal();
+    addClickHandlersToElements();
+    pullRecordsFromDB();
+}
+
+function closeModalOnClickOutsideModal(){
+    let editModal = $('#updateModal');
+
     let delModal = $('#delModal');
     window.onclick = function(event) {
         if (event.target == delModal[0]) {
             delModal.css("display","none");
         }
-    }
-
-    // Get the modal
-    let editModal = $('#updateModal');
-
-    // When the user clicks anywhere outside of the modal, close it
-    window.onclick = function(event) {
-        if (event.target == editModal[0]) {
+        else if(event.target == editModal[0]){
             editModal.css("display","none");
         }
-    }
-
-    addClickHandlersToElements();
-    pullRecordsFromDB();
+    };
 }
-
-
 /***************************************************************************************************
 * handleStudentNameInput
 * @params {none} 
@@ -68,8 +63,9 @@ function handleStudentNameInput(){
         alert.removeClass('hidden').addClass('show');
     });
     name.on('keydown', (event) => {
+
         if( event.keyCode === 32){
-            if($('#studentName').val() === ""){
+            if($('#studentName').val() === "" ){
                 event.preventDefault();
             }
         }
@@ -117,6 +113,11 @@ function handleCourseInput(){
     let alert = $("#course-alert");
 
     course.on('keydown', (event) => {
+        if( event.keyCode === 32){
+            if($('#course').val() === "" ){
+                event.preventDefault();
+            }
+        }
         if ( event.keyCode === 191 || event.keyCode === 192 || (event.keyCode >= 186 && event.keyCode <= 188) || (event.keyCode >= 219 && event.keyCode <= 221)) {
             event.preventDefault();
         }
@@ -427,7 +428,7 @@ function pullRecordsFromDB(){
         error: function () {
             $(".displayError").empty();
             let error = $("<h5>", {
-                text: response.errors[0],
+                text: "Unable to connect to the server",
                 style: "color: red"
             });
             $(".displayError").append(error);
@@ -505,11 +506,11 @@ function addingDataToServer(name, course, grade) {
                 }, 2300);
             }
         },
-        error: function () {
+        error: function (response) {
             $(".displayError").empty();
 
             let error = $("<h5>", {
-                text: response.errors[0],
+                text: "Unable to connect to the server",
                 style: "color: red"
             });
             $(".displayError").append(error);
@@ -558,11 +559,11 @@ function deleteStudentFrServer( student, studentIndex ) {
             }
 
         },
-        error: function () {
+        error: function (response) {
             $(".displayError").empty();
 
             let error = $("<h5>", {
-                text: response.errors[0],
+                text: "Unable to connect to the server",
                 style: "color: red"
             });
             $(".del-modal-body").append(error);
@@ -656,12 +657,12 @@ function updateStudentFrServer( id, name, course, grade ) {
 
 
         },
-        error: function () {
+        error: function (response) {
             console.log("Trouble getting data");
             $(".modal-body .error").empty();
 
             let error = $("<h5>", {
-                text: response.errors[0],
+                text: "Unable to connect to the server",
                 style: "color: red"
             });
             $(".modal-body .error").append(error);

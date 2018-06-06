@@ -8,17 +8,29 @@ if(empty($_POST['id']) ||empty($_POST['newName']) || empty($_POST['newCourse']) 
 	exit('missing data');
 };
 $id = $_POST['id'];
-$newName = $_POST['newName'];
-$newCourse = $_POST['newCourse'];
-$newGrade = $_POST['newGrade'];
+$newName = stripcslashes($_POST['newName']);
+$newCourse = stripcslashes($_POST['newCourse']);
+$newGrade = intval($_POST['newGrade']);
 
-$id = 
+$sanitizedName = $conn->real_escape_string($newName);
+$sanitizedCourse = $conn->real_escape_string($newCourse);
 
 //write a query that updates the data at the given student ID.  
-$query = "UPDATE `student_data` SET `name`='$newName',`grade`='$newGrade',`course_name`='$newCourse' WHERE id = '$id'";
+$query = "UPDATE student_data SET name = ?, grade = ?, course_name = ? WHERE id = ? ";
+$stmt = $conn->prepare($query);
+$stmt->bind_param("sisi", $sanitizedName, $newGrade, $sanitizedCourse, $id);
+$stmt->execute();
+$stmt->close();
+
+preg_match_all('/(\S[^:]+): (\d+)/', $conn->info, $matches); 
+$infoArr = array_combine ($matches[1], $matches[2]);
+// var_export($infoArr);
 
 //send the query to the database, store the result of the query into $result
-$result = mysqli_query($conn, $query);
+//get value of matched rows
+$result = reset($infoArr);
+// print_r ($result);
+
 $output = [
 	'success' => false,
 	'errors' => []
@@ -27,17 +39,17 @@ $output = [
 //check if $result is empty. 
 if(!$result){ 
 	//if it is, add 'database error' to errors
-	$output['errors'][] = 'database error';
+	$output['errors'][] = 'Database connection error';
 }
 else{
-	//check if the number of affected rows is 1.  
-	if( $row = mysqli_affected_rows($conn) === 1 ){
+	//check if the number of matched rows is 1.  
+	if( $result == 1 ){
 		//if it did, change output success to true
 		$output['success'] = true;
 	}
 	else{
 		//if not, add to the errors: 'update error'
-		$output['errors'][] = 'update error';
+		$output['errors'][] = 'Update error - Cant update student';
 	}
 } 
 
