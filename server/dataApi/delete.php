@@ -28,7 +28,7 @@ if(!$result){
 }
 else{ 
 	//check if the number of affected rows is 1
-	if( $result == 1 ){
+	if( $result === 1 ){
 		//if it did, change output success to true
 		$output['success'] = true;
 	}
