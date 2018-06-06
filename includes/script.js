@@ -244,7 +244,7 @@ function addStudent(){
 
         setInterval(()=>{
             $(".displayError").empty();            
-        }, 2000);
+        }, 2300);
     
     }
     else{
@@ -399,21 +399,28 @@ function pullRecordsFromDB(){
                 }
             }
             else{
-                console.log('something happened');
+                $(".displayError").empty();
+
                 let error = $("<h5>", {
-                    text: "ERROR GETTING DATA - Please try again later!",
+                    text: response.errors[0],
                     style: "color: red"
                 });
                 $(".displayError").append(error);
+                setInterval( ()=>{
+                    $(".displayError").empty();
+                }, 2300);
             }
         },
         error: function () {
-            console.log("Trouble getting data");
+            $(".displayError").empty();
             let error = $("<h5>", {
-                text: "ERROR GETTING DATA - Please try again later!",
+                text: response.errors[0],
                 style: "color: red"
             });
             $(".displayError").append(error);
+            setInterval( ()=>{
+                $(".displayError").empty();
+            }, 2300);
         }
 
     });
@@ -457,6 +464,7 @@ function addingDataToServer(name, course, grade) {
                 student_array[student_array.length-1].id = response['id'] ;
                 console.log('last student', student_array[student_array.length-1]);
                 
+                $(".displayError").empty();
                 let message = $("<h5>", {
                     text: "Student Successfully Added!",
                     style: "color: green"
@@ -465,27 +473,36 @@ function addingDataToServer(name, course, grade) {
 
                 setInterval( ()=>{
                     $(".displayError").empty();
-                }, 2000);
+                }, 2300);
 
                 clearAddStudentFormInputs();
                 cleanUpAddForm();
                 updateStudentList(student_array);
             }
             else{
+                $(".displayError").empty();
+
                 let error = $("<h5>", {
-                    text: "ERROR ADDING STUDENT - Please try again later!",
+                    text: response.errors[0],
                     style: "color: red"
                 });
                 $(".displayError").append(error);
+                setInterval( ()=>{
+                    $(".displayError").empty();
+                }, 2300);
             }
         },
         error: function () {
-            console.log("Trouble getting data");
+            $(".displayError").empty();
+
             let error = $("<h5>", {
-                text: "ERROR ADDING STUDENT - Please try again later!",
+                text: response.errors[0],
                 style: "color: red"
             });
             $(".displayError").append(error);
+            setInterval( ()=>{
+                $(".displayError").empty();
+            }, 2300);
         }
     }
 
@@ -515,21 +532,30 @@ function deleteStudentFrServer( student, studentIndex ) {
                 closeDeletingModal();
             }
             else{
+                $(".displayError").empty();
+
                 let error = $("<h5>", {
-                    text: "ERROR - Please try again later!",
+                    text: response.errors[0],
                     style: "color: red"
                 });
                 $(".del-modal-body").append(error);
+                setInterval( ()=>{
+                    $(".displayError").empty();
+                }, 2300);
             }
 
         },
         error: function () {
-            console.log("Trouble getting data");
+            $(".displayError").empty();
+
             let error = $("<h5>", {
-                text: "ERROR - Please try again later!",
+                text: response.errors[0],
                 style: "color: red"
             });
             $(".del-modal-body").append(error);
+            setInterval( ()=>{
+                $(".displayError").empty();
+            }, 2300);
         }
     }
 
@@ -603,22 +629,32 @@ function updateStudentFrServer( id, name, course, grade ) {
                 closeEditingModal();
             }
             else{
+                $(".displayError").empty();
+
                 let error = $("<h5>", {
-                    text: "ERROR - Please try again later!",
+                    text: response.errors[0],
                     style: "color: red"
                 });
                 $(".modal-body .error").append(error);
+                setInterval( ()=>{
+                    $(".displayError").empty();
+                }, 2300);
             }
 
 
         },
         error: function () {
             console.log("Trouble getting data");
+            $(".displayError").empty();
+
             let error = $("<h5>", {
-                text: "ERROR - Please try again later!",
+                text: response.errors[0],
                 style: "color: red"
             });
             $(".modal-body .error").append(error);
+            setInterval( ()=>{
+                $(".displayError").empty();
+            }, 2300);
         }
     }
 
