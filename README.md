@@ -1,6 +1,6 @@
 ## Student Grade Table
 
-Live link:[HERE](http://sgt.duydoescode.tech/)
+- Live Link: [CLICK HERE](http://sgt.duydoescode.tech/)
 
 Student Grade Table (SGT) is a content management system (CMS) that allows the user to create, read, and delete student data from a MySQL database. SGT utilizes HTML5 to structure the page and Bootstrap for UI/UX and mobile-responsiveness. CSS3 was used to style and give responsiveness the edit modal and delete modal. JavaScript and jQuery were utilized for DOM manipulation and AJAX calls were made to the PHP server to retrieve data. SGT also utilized a PHP script cron job to reset table data every hour.
 
