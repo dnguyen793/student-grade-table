@@ -1,6 +1,6 @@
 <?php
 
-require_once("mysql_credentials.php");
+require_once("mysql_admin.php");
 
 $truncate = "TRUNCATE TABLE student_data";
 $result = $conn->query($truncate);
