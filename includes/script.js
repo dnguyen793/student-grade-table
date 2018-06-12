@@ -403,7 +403,6 @@ function pullRecordsFromDB(){
         dataType: 'json',
         method: 'get',
         success: function(response){
-            console.log('data', response);
             if(response.success){
             
                 if(response.studentData.length>0){
@@ -471,12 +470,10 @@ function addingDataToServer(name, course, grade) {
             // 'api_key': 'X9BhkpbIMK',
 
         success: function (response) {
-            console.log('insert response:', response);
             if(response.success){
    
                 student_array.push(student);
                 student_array[student_array.length-1].id = response['id'] ;
-                console.log('last student', student_array[student_array.length-1]);
                 
                 $(".displayError").empty();
                 let message = $("<h5>", {
@@ -529,7 +526,6 @@ function addingDataToServer(name, course, grade) {
  * @returns {undefined}
  */
 function deleteStudentFrServer( student, studentIndex ) {
-    console.log('del student:', student.id, studentIndex);
     var ajaxConfig = {
         dataType:'json',
         method: 'post',
@@ -539,7 +535,6 @@ function deleteStudentFrServer( student, studentIndex ) {
             'student_id': student.id,
         },
         success: function (response) {
-            console.log('del resp:', response);
             if(response.success){
                 student_array.splice(studentIndex, 1);
                 updateStudentList( student_array );
@@ -628,8 +623,6 @@ function updateStudentFrServer( id, name, course, grade ) {
             newGrade: grade
         },
         success: function (response) {
-            console.log('update resp:', response);
-            console.log('new student data:', id, name, course, grade);
 
             if(response.success){
                 for(let i = 0; i < student_array.length; i++){
@@ -658,7 +651,7 @@ function updateStudentFrServer( id, name, course, grade ) {
 
         },
         error: function (response) {
-            console.log("Trouble getting data");
+
             $(".modal-body .error").empty();
 
             let error = $("<h5>", {
@@ -749,7 +742,7 @@ function displayDeletingModal( studentObj, studentIndex ){
 
     $(".cancelDelBtn").on("click", closeDeletingModal);
     $(".delBtn").on("click", ()=>{
-        console.log( "Deleting:", studentIndex, studentObj);
+
         deleteStudentFrServer(student_array[studentIndex], studentIndex);
 
     });
